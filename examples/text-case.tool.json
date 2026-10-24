@@ -1,0 +1,8 @@
+{
+  "id": "text.case",
+  "version": "1.0.0",
+  "description": "Additional discoverable text utility using the same trusted adapter",
+  "adapter": "builtin.text.transform",
+  "effects": ["read"],
+  "operations": ["uppercase", "lowercase"]
+}

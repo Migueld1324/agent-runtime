@@ -1,0 +1,7 @@
+node_modules/
+data/*
+!data/.gitkeep
+workspace/*
+!workspace/.gitkeep
+.env
+*.log

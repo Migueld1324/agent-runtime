@@ -1,0 +1,42 @@
+{
+  "name": "agent-runtime-poc",
+  "version": "0.3.1",
+  "private": true,
+  "type": "module",
+  "description": "PoC 0.3.1: ChatGPT account auth SIWC plus optional APIs; durable LangGraph and tool gateway",
+  "engines": {
+    "node": ">=24.15.0"
+  },
+  "scripts": {
+    "agent": "tsx src/cli.ts",
+    "typecheck": "tsc --noEmit",
+    "test:core": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test test/*.test.ts",
+    "test:integration": "tsx test/integration.ts",
+    "agent:v2": "tsx src/v2/cli.ts",
+    "test:v2": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test test/v2-*.test.ts",
+    "test:v2:integration": "tsx test/v2-integration.ts",
+    "agent:v3": "tsx src/v3/cli.ts",
+    "test:v3": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test test/v3-*.test.ts",
+    "test:v3:integration": "tsx test/v3-integration.ts",
+    "auth:v3": "tsx src/v3/auth-cli.ts"
+  },
+  "dependencies": {
+    "@langchain/core": "^1.0.0",
+    "@langchain/langgraph": "^1.5.2",
+    "@langchain/langgraph-checkpoint-sqlite": "^1.1.0",
+    "@ai-sdk/anthropic": "^4.0.0",
+    "@ai-sdk/google": "^4.0.0",
+    "@ai-sdk/openai": "^4.0.0",
+    "ai": "^7.0.0",
+    "jose": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.8.0"
+  },
+  "allowScripts": {
+    "better-sqlite3@12.11.1": true,
+    "esbuild@0.28.2": true
+  }
+}

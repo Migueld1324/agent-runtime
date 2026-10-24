@@ -1,0 +1,8 @@
+{
+  "id": "text.transform",
+  "version": "1.0.0",
+  "description": "Transform input text offline (uppercase, lowercase or titlecase)",
+  "adapter": "builtin.text.transform",
+  "effects": ["read"],
+  "operations": ["uppercase", "lowercase", "titlecase"]
+}
