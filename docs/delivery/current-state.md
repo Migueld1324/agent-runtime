@@ -2,7 +2,7 @@
 
 **Fecha de corte:** 24-10-2026. **Versión:** `0.3.1` en `package.json`. **Evidencia:** código y tests del repositorio contrastados con la documentación; resultados de validación en CachyOS reportados por el equipo de desarrollo. No se reejecutaron suites ni inferencias remotas durante esta revisión documental.
 
-Este documento concentra el estado y el progreso acumulado; se actualiza como equivalente existente de `docs/delivery/progress.md`, sin crear un segundo registro. **PoC 0.3.1 permanece pendiente de cierre formal** hasta evaluar los seis casos indicados más abajo.
+Este documento detalla el estado de implementación y su evidencia. El seguimiento de avances y pendientes se registra en [progress.md](progress.md). **PoC 0.3.1 permanece pendiente de cierre formal** hasta evaluar los seis casos indicados más abajo.
 
 ## Implementado y validado
 
