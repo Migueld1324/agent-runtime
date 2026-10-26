@@ -2,6 +2,26 @@
 
 **Actualización 26-10-2026:** PoC 0.3.1 cerrada dentro de su alcance. Los seis casos de cierre fueron evaluados; consultar [evidencia de cierre](poc-031-closure.md). El corte del 24-10-2026 que sigue se conserva como antecedente histórico; sus pendientes de cierre y observaciones de campos adicionales quedan sustituidos por ese registro. Las capacidades de arquitectura aún no implementadas siguen pendientes.
 
+## Consolidación posterior al cierre — 26-10-2026
+
+Base comprobada tras actualizar origin: `main` y `origin/main` en `efcb035` (merge del PR #1), con `e487b70` como ancestro. La configuración de CI se desarrolla separadamente desde esa base; no se modifica la semántica del runtime.
+
+| Área | Comportamiento implementado / diagnóstico actual | Trabajo pendiente |
+|---|---|---|
+| CI | Workflow offline para PR a `main`, Node 24, instalación por lockfile, typecheck, unitarios/contratos e integraciones secuenciales en runner desechable. Validación local limpia: 21/21 y tres integraciones PASS; actionlint PASS. | Comprobar ejecución hospedada en el PR. Ver [verificación](verification.md#integración-continua-offline). |
+| Estados y errores | v3 usa `queued`, `tool_proposed`, `authorized`, `running`, `completed`, `denied`, `budget_exhausted`; `WAITING_APPROVAL` es una proyección del CLI sobre `tool_proposed` y el siguiente nodo. Las excepciones persisten como errores de tareas de LangGraph y conservan el estado anterior. | Contrato de fallo, recuperación y compatibilidad de checkpoints, sujeto a aprobación antes de cambiar comportamiento. |
+| Gateway | Campos adicionales rechazados desde el cierre. La validación ocurre antes de autorización y otra vez al ejecutar; huella y hash vinculan la operación exacta. | Descriptor sin `inputSchema`; reglas efectivas en `v2/tools.ts` y esquema para proveedores en `v3/tool-schema.ts` separados. Formalizar contrato extensible y migración de huellas/grants antes de implementarlo. |
+
+Los tests de fallos actuales prueban errores del primer nodo de modelo: checkpoint `queued`, `next: model`, error persistido, sin observaciones ni fallback. No demuestran recuperación tras una herramienta confirmada ni fallo del Executor. El CLI muestra el estado anterior sin interpretar el error de tarea; solo ofrece `start`, `status`, `approve`, `deny`, sin comando de reintento. En un error del Executor puede persistir el estado anterior `authorized`; una excepción después de producir el efecto puede dejar ese efecto sin observación confirmada. No convertir ese caso automáticamente en un fallo seguro para reintento.
+
+`completed` sigue significando respuesta final del modelo en la PoC: no implementa aún criterios genéricos de éxito. Denegación y presupuesto agotado sí detienen el grafo; no equivalen a una excepción del proveedor. `interrupt()` es una suspensión deliberada y no debe tratarse como fallo mediante un catch genérico.
+
+Orden de consolidación: (1) CI aislada; (2) propuesta y aprobación del contrato de estados/errores con ADR y compatibilidad, luego transiciones y regresiones; (3) propuesta y aprobación del contrato de herramientas extensible con ADR, luego validación compartida y migración. Las referencias existentes son ADR-017/021, ADR-049–052, ADR-068–072 y ADR-075/077–079. No se ha aprobado ni implementado una enmienda de estados o del Gateway en este cambio.
+
+La reconciliación general de efectos externos inciertos sigue pendiente. Ningún retry debe suponerse seguro por el mero hecho de existir un checkpoint. Memoria, nuevos proveedores, routing por métricas y despliegue productivo quedan fuera de esta consolidación.
+
+## Corte histórico del 24-10-2026
+
 **Fecha de corte:** 24-10-2026. **Versión:** `0.3.1` en `package.json`. **Evidencia:** código y tests del repositorio contrastados con la documentación; resultados de validación en CachyOS reportados por el equipo de desarrollo. No se reejecutaron suites ni inferencias remotas durante esta revisión documental.
 
 Este documento detalla el estado de implementación y su evidencia. El seguimiento de avances y pendientes se registra en [progress.md](progress.md). **Al corte del 24-10-2026, PoC 0.3.1 permanecía pendiente de cierre formal**; el registro del 26-10-2026 documenta su cierre.
