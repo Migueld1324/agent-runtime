@@ -2,6 +2,28 @@
 
 This is a narrowly scoped correction to the **previous 0.3 package**. The tested v2 Policy Gateway, Registry, LangGraph planner/checkpointer, approvals, request hashes, grants and CLI commands are unchanged. The model-selection layer no longer assumes that cloud = paid API key.
 
+## Verified objectives after PoC 0.3.1
+
+New v3 runs require an explicit acceptance criterion from the caller:
+`--expect-file SAFE_NAME.md --expect-content 'EXACT EXPECTED CONTENT'`.
+The criterion is fixed before execution and bound to the run, objective and scope.
+A model's final answer triggers an authorized, bounded read of the real workspace
+file. Only matching bytes produce `COMPLETED`; a missing/different file produces
+`FAILED`. Inconclusive checks produce `PAUSED`; denied reads produce `DENIED`.
+
+A transient verification failure may be retried explicitly with
+`npm run agent:v3 -- retry-verification RUN_ID` (at most two recoveries).
+This repeats only the check, preserving confirmed tool results. It never retries
+an uncertain write. The first verifier supports one Markdown file and at most
+16 KiB of expected UTF-8 content; it does not verify arbitrary objectives or
+prove that a particular tool was used. Such requirements need additional criteria.
+
+Historical checkpoints remain readable; historical `COMPLETED` results are
+labelled as unverified legacy results. Continuing legacy runs requires an explicit
+migration, which is still pending. General model/tool error recovery and durable
+markers for uncertain effects are subsequent increments of
+[ADR-085](docs/decisions/085-runtime-failures-and-recovery.md).
+
 ## What changed
 
 - `--model chatgpt`: uses OpenAI's **official Sign in with ChatGPT (SIWC)** OAuth flow for eligible open-source applications and approved private clients. No API key required. This is an inference adapter, **not a Codex/Hermes/OpenClaw agent handoff**.
@@ -61,7 +83,7 @@ npm run agent:v2 -- tools register examples/text-transform.tool.json
 Then execute **your own** LangGraph agent with the authenticated provider:
 
 ```fish
-npm run agent:v3 -- start account-1 --model chatgpt --task 'Convierte "prueba de IA" a mayúsculas y guarda el resultado en cuenta-v3.md'
+npm run agent:v3 -- start account-1 --model chatgpt --task 'Convierte "prueba de IA" a mayúsculas y guarda el resultado en cuenta-v3.md' --expect-file cuenta-v3.md --expect-content 'PRUEBA DE IA'
 npm run agent:v3 -- status account-1
 ```
 

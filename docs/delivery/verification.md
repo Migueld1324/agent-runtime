@@ -53,7 +53,32 @@ npm run test:v3:integration
 
 Validación local del 26-10-2026 sobre la base integrada `efcb035` y el workflow de consolidación: instalación limpia desde lockfile PASS; Node v24.22.1, npm 11.19.1; typecheck PASS; `test:core` **21/21 PASS**; integraciones v1/v2/v3 PASS. Se utilizó una copia temporal independiente con dependencias recién instaladas, sin credenciales reales. `actionlint` v1.7.12: PASS para sintaxis, expresiones y configuración. El lockfile no cambió.
 
-Estos resultados son nuevos y locales. **La ejecución hospedada en GitHub está pendiente de abrir/actualizar el PR**; no se acredita todavía un run remoto ni una prueba en Ubuntu. Un resultado local satisfactorio no sustituye esa comprobación.
+### Evidencia hospedada en GitHub
+
+Workflow [Offline CI — run 40284439972](https://github.com/Migueld1324/agent-runtime/actions/runs/40284439972), **intento 4: `completed` / `success`**, comprobado mediante la API de GitHub. Evento `pull_request`, rama `ci/offline-validation`, commit fuente `d2ea60545d9ada7283d6d9f26fa24bfb198d3380`, archivo `.github/workflows/ci.yml`.
+
+[Job Node 24 offline checks](https://github.com/Migueld1324/agent-runtime/actions/runs/40284439972/job/121447653880): runner `ubuntu-24.04`; inicio **2026-10-26 07:22:15 UTC**, final **07:22:52 UTC**. GitHub informa `success` para todos los pasos de instalación y validación:
+
+| Paso | Resultado hospedado |
+|---|---|
+| Install locked dependencies | PASS |
+| Typecheck | PASS |
+| Core and provider contract tests | PASS |
+| Durable approval integration | PASS |
+| Registry and grants integration | PASS |
+| Sequential planner integration | PASS |
+
+Esta evidencia confirma la ejecución real en el runner hospedado y sustituye el pendiente anterior. El conteo **21/21** del apartado anterior corresponde a la ejecución local documentada; los resultados hospedados aquí se acreditan por las conclusiones de los pasos del job, sin atribuirles un conteo no inspeccionado. No incluye inferencia ni credenciales reales de ChatGPT.
+
+La configuración de CI quedó integrada mediante [PR #2](https://github.com/Migueld1324/agent-runtime/pull/2), commit de `main` `1a36ba5`. El run citado valida el PR con el commit fuente indicado, no los cambios documentales posteriores ni la implementación futura de ADR-085.
+
+## Verificador de objetivos — primer incremento de ADR-085
+
+Contrato aprobado e implementado en `src/v3/objective.ts`, grafo y CLI v3. La [especificación](../specifications/runtime.md) describe criterio, evidencia, estados y límites. Ocho tests nuevos en `test/v3-objective.test.ts` cubren criterios inválidos y su vinculación, lectura real, policy, symlinks, límites de bytes, ausencia/incumplimiento del objetivo, evidencia durable, cambio de criterio durante aprobación, suspensión y dos recuperaciones acotadas sin replay de modelo/herramientas. Las dependencias inyectadas del grafo son confiables y se usan para simular errores transitorios; no son callbacks suministrados por el modelo.
+
+Validación local nueva sobre la base `1a36ba5` más el árbol de trabajo del incremento, Node v24.22.1, en copia temporal aislada y sin credenciales reales: `typecheck` PASS, `test:core` **29/29 PASS**, integraciones v1/v2/v3 PASS. La integración v3 conserva aprobaciones y grants e incluye recuperación del verificador desde otro proceso CLI. Las pruebas existentes de fallos de proveedor y presupuesto se conservan, añadiendo el criterio requerido al input inicial.
+
+El run remoto de CI documentado arriba corresponde a la configuración de CI anterior, no a este incremento. Su ejecución hospedada nueva sigue pendiente. No se ejecutaron inferencias remotas nuevas. No se acreditan todavía migración de checkpoints ni recuperación de fallos generales o efectos inciertos.
 
 ## Evidencia histórica disponible de 0.3.1
 

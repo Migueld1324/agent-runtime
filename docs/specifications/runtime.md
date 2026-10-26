@@ -2,6 +2,35 @@
 
 **Diseño:** Agent Runtime v0.1 (ADR-073–084), separado de proveedores de inferencia. **Implementado parcialmente:** LangGraph + SQLite checkpoint en PoC 0.3.1.
 
+## Consolidación aprobada — ADR-085
+
+[ADR-085](../decisions/085-runtime-failures-and-recovery.md) formaliza fallos, recuperación, incertidumbre y compatibilidad. **Aceptada; implementación incremental.** `completed` exige verificación del objetivo: una respuesta final del modelo solo activa el verificador. Recuperación general, marcadores durables de efectos inciertos y migración de checkpoints siguen pendientes; no confundir el contrato completo aprobado con su primer incremento implementado.
+
+### Contrato de objetivo implementado en v3
+
+```ts
+interface ObjectiveCriterion {
+  id: 'objective-file';
+  kind: 'workspace.file_content';
+  version: 1;
+  fileName: string;          // basename Markdown seguro del workspace
+  expectedContent: string;   // UTF-8, máximo 16 KiB
+}
+```
+
+El solicitante define un criterio antes de iniciar mediante `--expect-file` y `--expect-content`. No se deriva del texto libre del modelo. Un hash lo vincula al run, objetivo y ámbito; los nodos de propuesta, autorización, ejecución y comprobación verifican esa vinculación. Los checkpoints nuevos contienen `stateVersion: 1`, criterio/hash, evidencia y contador de recuperación.
+
+El verificador resuelve `filesystem.read`, aplica la policy actual y realiza una lectura real y acotada. No acepta rutas arbitrarias, symlinks ni archivos no regulares. Los resultados son `passed`, `failed` o `inconclusive`, con motivo, fecha, hash de criterio y huella del descriptor. Una lectura completa dentro del límite incluye hash de contenido y tamaño observado; la evidencia no duplica el texto.
+
+- Coincidencia exacta: `completed`, sin operación pendiente ni autorización activa.
+- Archivo inexistente, contenido distinto o target no regular: `failed`.
+- Denegación de lectura por policy: `denied`.
+- Comprobación inconclusa: `paused`; solo errores de lectura transitorios reconocidos habilitan recuperación.
+
+`retry-verification` requiere una interrupción real en `verification_recovery`, identidad/hash coincidentes y presupuesto disponible. Persiste `recovering` y el contador antes de leer otra vez. Máximo dos recuperaciones; el tercer fallo transitorio termina en `failed`. No vuelve al modelo ni al Executor. Un resultado negativo no activa reparación automática.
+
+Los checkpoints legados siguen consultables, con `completed` antiguo etiquetado como no verificado. Su continuación se bloquea hasta una migración explícita segura. Este incremento verifica un resultado de archivo; no prueba objetivos arbitrarios ni requisitos sobre qué herramientas debieron usarse.
+
 ## Responsabilidad
 
 Orquestar peticiones, planes incrementales, inferencias, herramientas, permisos, presupuestos, estados, checkpoints y recuperación. El LLM no controla estados ni concede permisos y no puede dar una operación por ejecutada sin observación verificable.
@@ -133,7 +162,7 @@ Consolidar evidencias de ejecución en un `ExperienceRecord` propuesto y derivar
 
 El runtime debe admitir identificación de agentes y futura delegación dentro de las mismas políticas. **No construir multiagente paralelo en el MVP** ni introducir plataforma/orquestador externo. ADR-084 es extensibilidad, no prueba de funcionamiento actual.
 
-## Corte actual de la PoC
+## Corte histórico de la PoC 0.3.1
 
 `src/v3/graph.ts`: LangGraph persiste estado con `SqliteSaver` (`data/runtime-v3.sqlite`), planifica una herramienta por inferencia, revalida descriptor/hash, utiliza `interrupt` para aprobación y continúa después de `approve`. Límite actual `MAX_TOOL_CALLS = 5`. El `mock` prueba regresión, y `chatgpt` ya produjo propuestas reales de dos herramientas. No hay todavía `TaskPlan` general con dependencias, compensación de efectos complejos ni Context Manager completo.
 

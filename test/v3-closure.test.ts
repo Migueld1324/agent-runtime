@@ -22,6 +22,7 @@ test('five proposals persist across graph recreation; no sixth inference or effe
   try {
     let graph=await createGraphV3(options);
     await graph.invoke({runId:'budget',objective:'test',modelId:'mock',selectionReason:'test',
+      criterion:{id:'objective-file',kind:'workspace.file_content',version:1,fileName:'closure-objective.md',expectedContent:'test'},
       scopeId:'poc-workspace',observations:[],toolCount:0,status:'queued',result:''},config);
     for(let i=1;i<=5;i++) {
       // A new graph opens the SQLite checkpoint before every approval.
@@ -81,7 +82,8 @@ test('invalid proposals never reach approval or execution; checkpoint remains in
         decide:async()=>parseModelProposal(JSON.stringify(proposal),tools)});
       const config={configurable:{thread_id:`invalid-${i}`}};
       await assert.rejects(()=>graph.invoke({runId:`invalid-${i}`,objective:'invalid test',modelId:'mock',
-        selectionReason:'test',scopeId:'poc-workspace',observations:[],toolCount:0,status:'queued',result:''},config));
+        selectionReason:'test',criterion:{id:'objective-file',kind:'workspace.file_content',version:1,fileName:'closure-objective.md',expectedContent:'test'},
+      scopeId:'poc-workspace',observations:[],toolCount:0,status:'queued',result:''},config));
       const snap=await graph.getState(config);
       assert.equal(snap.values.toolCount,0);
       assert.deepEqual(snap.values.observations,[]);

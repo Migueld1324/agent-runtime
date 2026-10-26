@@ -9,6 +9,7 @@ import { executeTool, validateToolArguments, type ToolArguments } from '../v2/to
 import { decideAction } from './models.ts';
 import type { Observation } from './mock.ts';
 import type { ModelName } from './router.ts';
+import { assertObjective, criterionHash, validateCriterion, verifyObjective, type ObjectiveCriterion, type VerificationEvidence } from './objective.ts';
 
 const MAX_TOOL_CALLS = 5;
 const AgentState = Annotation.Root({
@@ -28,13 +29,24 @@ const AgentState = Annotation.Root({
   remember: Annotation<boolean>(),
   status: Annotation<string>(),
   result: Annotation<string>(),
+  stateVersion: Annotation<number>(),
+  criterion: Annotation<ObjectiveCriterion>(),
+  criterionHash: Annotation<string>(),
+  verification: Annotation<VerificationEvidence>(),
+  recoveryCount: Annotation<number>(),
 });
 
-export async function createGraphV3(options: {checkpointPath?: string; decide?: typeof decideAction} = {}) {
+export async function createGraphV3(options: {checkpointPath?: string; decide?: typeof decideAction; verify?: typeof verifyObjective} = {}) {
   await mkdir(DATA_DIR, { recursive: true });
   const checkpointer = SqliteSaver.fromConnString(options.checkpointPath ?? join(DATA_DIR, 'runtime-v3.sqlite'));
   return new StateGraph(AgentState)
+    .addNode('intake', async state => {
+      if (state.stateVersion !== undefined && state.stateVersion !== 1) throw new Error('Unsupported checkpoint version');
+      const criterion = validateCriterion(state.criterion);
+      return {stateVersion:1,criterion,criterionHash:criterionHash({...state,criterion}),recoveryCount:0};
+    })
     .addNode('model', async (state) => {
+      assertObjective(state);
       if (state.toolCount >= MAX_TOOL_CALLS) {
         return {status:'budget_exhausted', result:`Stopped after ${MAX_TOOL_CALLS} tool calls`};
       }
@@ -42,7 +54,7 @@ export async function createGraphV3(options: {checkpointPath?: string; decide?: 
         modelId: state.modelId, objective: state.objective,
         history: state.observations, tools: await listTools(),
       });
-      if (proposal.kind === 'final') return {status:'completed', result:proposal.text};
+      if (proposal.kind === 'final') return {status:'running', result:proposal.text, pendingToolId:'',authorized:false};
       const tool = await findTool(proposal.toolId);
       // Tools are validated before persisted approvals, and again at the execution boundary.
       validateToolArguments(tool, proposal.args);
@@ -52,6 +64,7 @@ export async function createGraphV3(options: {checkpointPath?: string; decide?: 
         authorized:false, authorizationSource:'none', remember:false};
     })
     .addNode('authorization', async (state) => {
+      assertObjective(state);
       const tool = await findTool(state.pendingToolId);
       if (descriptorFingerprint(tool) !== state.descriptorHash || requestHash(tool,state.pendingArgs) !== state.pendingHash) {
         return {status:'denied',result:'Tool descriptor or arguments changed',authorized:false};
@@ -75,6 +88,7 @@ export async function createGraphV3(options: {checkpointPath?: string; decide?: 
         result:valid.decision === 'approve' ? 'Approved' : 'Denied by user'};
     })
     .addNode('execute', async (state) => {
+      assertObjective(state);
       if (!state.authorized || state.status !== 'authorized') throw new Error('Tool Gateway: not authorized');
       const tool = await findTool(state.pendingToolId);
       if (descriptorFingerprint(tool) !== state.descriptorHash || requestHash(tool,state.pendingArgs) !== state.pendingHash) {
@@ -93,9 +107,47 @@ export async function createGraphV3(options: {checkpointPath?: string; decide?: 
           pendingToolId:'',authorized:false,authorizationSource:'none',remember:false};
       } finally { grants.close(); }
     })
-    .addEdge(START,'model')
-    .addConditionalEdges('model',s => s.status === 'tool_proposed' ? 'authorization' : END)
+    .addNode('check_objective', async state => {
+      assertObjective(state);
+      if (state.authorized || state.pendingToolId) throw new Error('Verification requires no pending operation');
+      let verification: VerificationEvidence;
+      try { verification = await (options.verify ?? verifyObjective)(state); }
+      catch {
+        verification = {criterionId:state.criterion.id,criterionVersion:1,criterionHash:state.criterionHash,
+          checkedAt:new Date().toISOString(),outcome:'inconclusive',reason:'read_unavailable',retryable:false};
+      }
+      if (verification.criterionHash !== state.criterionHash) throw new Error('Verification evidence does not match objective');
+      if (verification.outcome === 'passed') return {verification,status:'completed',result:'Objective verified'};
+      if (verification.outcome === 'failed') return {verification,status:'failed',result:`Objective not satisfied: ${verification.reason}`};
+      if (verification.reason === 'policy_denied') return {verification,status:'denied',result:'Verification denied by policy'};
+      if (verification.retryable && state.recoveryCount >= 2) {
+        return {verification:{...verification,retryable:false},status:'failed',result:'Verification recovery budget exhausted'};
+      }
+      return {verification,status:'paused',result:`Objective verification inconclusive: ${verification.reason}`};
+    })
+    .addNode('verification_recovery', async state => {
+      assertObjective(state);
+      if (state.status !== 'paused' || !state.verification?.retryable || state.recoveryCount >= 2) {
+        throw new Error('No safe verification recovery available');
+      }
+      // Invalid resumes must not leave a poisoned resume value in the checkpoint.
+      // Re-interrupt without changing state; LangGraph replays this pure node.
+      let invalid = false;
+      while (true) {
+        const answer: unknown = interrupt({type:'verification_retry',runId:state.runId,
+          criterionHash:state.criterionHash,invalidPreviousResponse:invalid});
+        const a = answer as {action?:string;runId?:string;criterionHash?:string} | null;
+        if (a?.action === 'retry_verification' && a.runId === state.runId && a.criterionHash === state.criterionHash) break;
+        invalid = true;
+      }
+      return {status:'recovering',recoveryCount:state.recoveryCount + 1};
+    })
+    .addEdge(START,'intake')
+    .addEdge('intake','model')
+    .addConditionalEdges('model',s => s.status === 'tool_proposed' ? 'authorization' : s.status === 'running' ? 'check_objective' : END)
     .addConditionalEdges('authorization',s => s.authorized ? 'execute' : END)
     .addEdge('execute','model')
+    .addConditionalEdges('check_objective',s => s.status === 'paused' && s.verification.retryable ? 'verification_recovery' : END)
+    .addEdge('verification_recovery','check_objective')
     .compile({checkpointer});
 }
