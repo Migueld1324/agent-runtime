@@ -20,6 +20,41 @@ Probar el **runtime como autoridad efectiva**, no solo obtener un texto plausibl
 
 Los seis casos de cierre se evaluaron y pasaron. Los ensayos reales, nuevas pruebas deterministas, regresiones y límites están en [poc-031-closure.md](poc-031-closure.md). PoC 0.3.1 queda cerrada dentro de su alcance.
 
+## Integración continua offline
+
+[Workflow Offline CI](../../.github/workflows/ci.yml): evento `pull_request` con rama destino `main`; un job en runner hospedado `ubuntu-24.04`, Node 24, permisos `contents: read` y límite de 15 minutos. Las acciones de checkout y setup-node están fijadas a commits de sus referencias v7. El checkout no conserva credenciales Git. Una nueva revisión del mismo PR cancela la ejecución anterior.
+
+La instalación usa `npm ci --no-audit --no-fund` y el lockfile versionado. El job ejecuta, en este orden y sin ignorar errores:
+
+1. `npm run typecheck` (este repositorio no define un script de build).
+2. `npm run test:core` (incluye todos los archivos `*.test.ts` de v1/v2/v3 y del cierre; no repetir las suites unitarias parciales).
+3. `npm run test:integration`.
+4. `npm run test:v2:integration`.
+5. `npm run test:v3:integration`.
+
+Las integraciones comparten registry y grants y deben ser secuenciales. Los efectos en `data/`, `workspace/` y temporales pertenecen al runner desechable; no se exportan ni se cachean. `AGENT_AUTH_DIR` apunta a `.ci-auth` dentro del checkout aislado, `AGENT_ALLOW_CLOUD=0`, el modelo ChatGPT y las claves comerciales están vacíos. No se consultan credenciales personales. Las pruebas del adaptador usan credenciales sintéticas temporales y fetch simulado. Las pruebas de routing evalúan configuraciones simuladas sin llamar proveedores.
+
+La descarga del código, Node y dependencias requiere red; las pruebas no requieren servicios externos. OAuth interactivo, catálogo remoto e inferencia ChatGPT real permanecen como validaciones manuales separadas; su evidencia histórica está en [el cierre](poc-031-closure.md). Esta configuración no representa aislamiento de red del proceso ni demuestra compatibilidad con todos los sistemas operativos. No configura reglas de protección de ramas.
+
+### Reproducción y validación
+
+Usar un checkout desechable limpio con Node >=24.15. No ejecutar las integraciones sobre los datos operacionales personales: revocan y crean grants, checkpoints y descriptores. En Bash:
+
+```bash
+export AGENT_AUTH_DIR="$PWD/.ci-auth" AGENT_ALLOW_CLOUD=0
+export CHATGPT_MODEL= OPENAI_API_KEY= ANTHROPIC_API_KEY= GOOGLE_GENERATIVE_AI_API_KEY=
+npm ci --no-audit --no-fund
+npm run typecheck
+npm run test:core
+npm run test:integration
+npm run test:v2:integration
+npm run test:v3:integration
+```
+
+Validación local del 26-10-2026 sobre la base integrada `efcb035` y el workflow de consolidación: instalación limpia desde lockfile PASS; Node v24.22.1, npm 11.19.1; typecheck PASS; `test:core` **21/21 PASS**; integraciones v1/v2/v3 PASS. Se utilizó una copia temporal independiente con dependencias recién instaladas, sin credenciales reales. `actionlint` v1.7.12: PASS para sintaxis, expresiones y configuración. El lockfile no cambió.
+
+Estos resultados son nuevos y locales. **La ejecución hospedada en GitHub está pendiente de abrir/actualizar el PR**; no se acredita todavía un run remoto ni una prueba en Ubuntu. Un resultado local satisfactorio no sustituye esa comprobación.
+
 ## Evidencia histórica disponible de 0.3.1
 
 ```fish

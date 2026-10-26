@@ -80,6 +80,12 @@ The expected *goal* is `PRUEBA DE IA`, but a real model is nondeterministic; do 
 
 ## Existing offline tests (still apply)
 
+Pull requests targeting `main` are configured to run [Offline CI](.github/workflows/ci.yml)
+on an isolated Ubuntu runner with Node 24 and `npm ci`. The job runs typecheck,
+all unit/contract tests and the v1/v2/v3 integrations sequentially, without model
+credentials. See [verification](docs/delivery/verification.md#integración-continua-offline)
+for scope, local reproduction and the distinction from manual ChatGPT tests.
+
 ```fish
 npm run test:v3
 npm run test:v3:integration
