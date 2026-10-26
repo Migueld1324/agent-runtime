@@ -8,6 +8,8 @@
 
 | Necesidad | Documento |
 |---|---|
+| Instalar y ejecutar una tarea offline con aprobación y verificación | [Guía inicial](guides/getting-started.md) |
+| Conectar una cuenta y ejecutar inferencia real | [ChatGPT](guides/chatgpt.md) |
 | Comprender el producto, su alcance y restricciones | [Visión y alcance](architecture/vision.md) |
 | Entender módulos, fronteras de confianza y dependencias | [Arquitectura del sistema](architecture/system.md) |
 | Implementar tipos, identidades, capacidades y resultados | [Contratos comunes](specifications/common-contracts.md) |

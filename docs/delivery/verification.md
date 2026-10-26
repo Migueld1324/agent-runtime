@@ -93,6 +93,8 @@ npm run test:v3:integration
 
 **Salidas reportadas:** 18/18 `test:core`, 5/5 `test:v2`, 9/9 `test:v3`, integración v2/v3 PASS y `typecheck` ejecutado sin objeciones. Dos ejecuciones reales de `chatgpt`: finalización aprobada (`account-1`) y denegación (`denial-1`).
 
+Las recetas actuales de instalación, ejecución offline y aprobaciones están en [la guía inicial](../guides/getting-started.md); el login y ensayo de inferencia real están en [la guía de ChatGPT](../guides/chatgpt.md). Utilizar IDs y archivos nuevos: los siguientes pasos documentan evidencia histórica, no comandos para reutilizar runs existentes.
+
 ## Protocolo real de autorización/denegación probado
 
 1. `start --model chatgpt` con objetivo de transformar texto y guardar Markdown.
