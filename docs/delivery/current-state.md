@@ -1,8 +1,10 @@
 # Estado de implementación — corte PoC 0.3.1
 
+**Actualización 26-10-2026:** PoC 0.3.1 cerrada dentro de su alcance. Los seis casos de cierre fueron evaluados; consultar [evidencia de cierre](poc-031-closure.md). El corte del 24-10-2026 que sigue se conserva como antecedente histórico; sus pendientes de cierre y observaciones de campos adicionales quedan sustituidos por ese registro. Las capacidades de arquitectura aún no implementadas siguen pendientes.
+
 **Fecha de corte:** 24-10-2026. **Versión:** `0.3.1` en `package.json`. **Evidencia:** código y tests del repositorio contrastados con la documentación; resultados de validación en CachyOS reportados por el equipo de desarrollo. No se reejecutaron suites ni inferencias remotas durante esta revisión documental.
 
-Este documento detalla el estado de implementación y su evidencia. El seguimiento de avances y pendientes se registra en [progress.md](progress.md). **PoC 0.3.1 permanece pendiente de cierre formal** hasta evaluar los seis casos indicados más abajo.
+Este documento detalla el estado de implementación y su evidencia. El seguimiento de avances y pendientes se registra en [progress.md](progress.md). **Al corte del 24-10-2026, PoC 0.3.1 permanecía pendiente de cierre formal**; el registro del 26-10-2026 documenta su cierre.
 
 ## Implementado y validado
 

@@ -30,15 +30,15 @@ const AgentState = Annotation.Root({
   result: Annotation<string>(),
 });
 
-export async function createGraphV3() {
+export async function createGraphV3(options: {checkpointPath?: string; decide?: typeof decideAction} = {}) {
   await mkdir(DATA_DIR, { recursive: true });
-  const checkpointer = SqliteSaver.fromConnString(join(DATA_DIR, 'runtime-v3.sqlite'));
+  const checkpointer = SqliteSaver.fromConnString(options.checkpointPath ?? join(DATA_DIR, 'runtime-v3.sqlite'));
   return new StateGraph(AgentState)
     .addNode('model', async (state) => {
       if (state.toolCount >= MAX_TOOL_CALLS) {
         return {status:'budget_exhausted', result:`Stopped after ${MAX_TOOL_CALLS} tool calls`};
       }
-      const proposal = await decideAction({
+      const proposal = await (options.decide ?? decideAction)({
         modelId: state.modelId, objective: state.objective,
         history: state.observations, tools: await listTools(),
       });

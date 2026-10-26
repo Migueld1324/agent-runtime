@@ -7,8 +7,9 @@ export function parseModelProposal(raw: string, tools: ToolDescriptor[]): ModelA
   try { value = JSON.parse(cleaned); } catch { throw new Error('ChatGPT returned malformed proposal JSON. Nothing executed.'); }
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('Proposal is not an object.');
   const p = value as Record<string,unknown>;
-  if (p.kind === 'final' && typeof p.text === 'string' && p.text.trim()) return {kind:'final',text:p.text.trim()};
+  if (p.kind === 'final' && Object.keys(p).every(k=>['kind','text'].includes(k)) && typeof p.text === 'string' && p.text.trim()) return {kind:'final',text:p.text.trim()};
   if (p.kind === 'tool' && typeof p.toolId === 'string' && tools.some(t=>t.id===p.toolId)
+    && Object.keys(p).every(k=>['kind','toolId','args'].includes(k))
     && p.args && typeof p.args === 'object' && !Array.isArray(p.args)
     && Object.values(p.args).every(v=>typeof v==='string'))
     return {kind:'tool',toolId:p.toolId,args:p.args as Record<string,string>};
