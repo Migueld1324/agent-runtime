@@ -51,7 +51,7 @@ export function criterionHash(context: ObjectiveContext): string {
     criterion:validateCriterion(context.criterion)}));
 }
 export function assertObjective(context: ObjectiveContext & {stateVersion: number; criterionHash: string}): void {
-  if (context.stateVersion !== 1) throw new Error('Legacy or unsupported checkpoint: explicit migration required');
+  if (![1,2].includes(context.stateVersion)) throw new Error('Legacy or unsupported checkpoint: explicit migration required');
   if (criterionHash(context) !== context.criterionHash) throw new Error('Objective criterion changed; continuation refused');
 }
 

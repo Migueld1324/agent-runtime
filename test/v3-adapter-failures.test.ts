@@ -55,15 +55,19 @@ test('full ChatGPT adapter failures persist without effects or commercial fallba
       };
       const graph=await createGraphV3({checkpointPath:join(dir,'runs.sqlite')});
       const config={configurable:{thread_id:c.name}};
-      await assert.rejects(()=>graph.invoke({runId:c.name,objective:'synthetic failure test',modelId:'chatgpt',
+      await graph.invoke({runId:c.name,objective:'synthetic failure test',modelId:'chatgpt',
         criterion:{id:'objective-file',kind:'workspace.file_content',version:1,fileName:'adapter-objective.md',expectedContent:'test'},
-        selectionReason:'test',scopeId:'poc-workspace',observations:[],toolCount:0,status:'queued',result:''},config),c.pattern);
+        selectionReason:'test',scopeId:'poc-workspace',observations:[],toolCount:0,status:'queued',result:''},config);
       const snap=await (await createGraphV3({checkpointPath:join(dir,'runs.sqlite')})).getState(config);
-      assert.equal(snap.values.status,'queued');
+      const recoverable=['missing','expired-refresh-denied','refresh-network','refresh-invalid-expiry','refresh-consent-lost','http-401','http-500','network','timeout','truncated'].includes(c.name);
+      assert.equal(snap.values.status,recoverable ? 'paused' : 'failed');
+      assert.equal(snap.values.runtimeError?.retryable,recoverable);
+      assert.equal(snap.values.runtimeError?.phase,'model');
       assert.equal(snap.values.toolCount,0);
       assert.deepEqual(snap.values.observations,[]);
-      assert.deepEqual(snap.next,['model']);
-      assert.ok(snap.tasks[0].error);
+      assert.deepEqual(snap.next,recoverable ? ['model_recovery'] : []);
+      assert.ok(!JSON.stringify(snap.values.runtimeError).includes('synthetic-access'));
+      assert.ok(!JSON.stringify(snap.values.runtimeError).includes('synthetic-refresh'));
       assert.equal(urls.length,c.requests,`${c.name}: no fallback or extra requests`);
       if(c.record) assert.deepEqual(JSON.parse(await readFile(path,'utf8')),c.record,'failed refresh preserves credentials');
     }

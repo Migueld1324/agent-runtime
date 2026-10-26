@@ -78,7 +78,29 @@ Contrato aprobado e implementado en `src/v3/objective.ts`, grafo y CLI v3. La [e
 
 Validación local nueva sobre la base `1a36ba5` más el árbol de trabajo del incremento, Node v24.22.1, en copia temporal aislada y sin credenciales reales: `typecheck` PASS, `test:core` **29/29 PASS**, integraciones v1/v2/v3 PASS. La integración v3 conserva aprobaciones y grants e incluye recuperación del verificador desde otro proceso CLI. Las pruebas existentes de fallos de proveedor y presupuesto se conservan, añadiendo el criterio requerido al input inicial.
 
-El run remoto de CI documentado arriba corresponde a la configuración de CI anterior, no a este incremento. Su ejecución hospedada nueva sigue pendiente. No se ejecutaron inferencias remotas nuevas. No se acreditan todavía migración de checkpoints ni recuperación de fallos generales o efectos inciertos.
+El run remoto de CI documentado arriba corresponde a la configuración de CI anterior, no a este incremento. Su ejecución hospedada nueva sigue pendiente. No se ejecutaron inferencias remotas nuevas. Ese primer incremento no acreditaba migración ni recuperación de fallos generales; la cobertura posterior se registra a continuación.
+
+## Recuperación durable — ADR-086
+
+Contrato aprobado de [ADR-086](../decisions/086-durable-invocations-and-recovery.md), implementado sobre la base `ba88410` (PR #3 integrado), en la rama `feat/durable-recovery`. La comprobación local del 26-10-2026 utiliza Node v24.22.1 y npm 11.19.1, copia desechable del código, autenticación aislada y claves comerciales vacías. Reutiliza las dependencias locales instaladas mediante enlace a `node_modules`; no representa una nueva instalación limpia ni modifica el lockfile.
+
+| Comprobación | Resultado local |
+|---|---|
+| `npm run typecheck` | PASS |
+| `npm run test:core` | **51/51 PASS** |
+| `npm run test:integration` | PASS |
+| `npm run test:v2:integration` | PASS |
+| `npm run test:v3:integration` | PASS |
+
+`test/v3-durable.test.ts` aporta 22 pruebas. Incluye barreras deterministas y `SIGKILL` en procesos auxiliares antes de reclamar, después de reclamar, después del efecto y después de confirmar el resultado; competencia con otro proceso y otro run; consulta durante ejecución; recuperación del lock al morir el propietario. Se contabilizan entradas al Executor y se comprueban observaciones únicas, efectos, estados y presupuestos.
+
+También cubre fallo de inferencia después de una herramienta confirmada, presupuesto compartido modelo/verificador, órdenes inválidas o reutilizadas, pérdida/reemplazo del ledger y pérdida del checkpoint, fallos reales de escritura SQLite, fallos inyectados del checkpointer, grant fallido o pendiente, error previo al efecto frente a incertidumbre, migración de aprobación v0/v1 y verificador v1, preservación del historial y rechazo de versiones/ejecuciones ambiguas.
+
+Las pruebas existentes del adaptador simulan autenticación, red, timeout, errores HTTP, eventos de fallo y stream truncado: ahora exigen `paused` o `failed` explícito, sin efecto ni fallback. Las propuestas inválidas deben terminar en `failed`, antes de autorización. Los escenarios del objetivo y las tres integraciones conservan sus garantías anteriores; la integración v3 recupera la verificación desde otro proceso CLI.
+
+La ejecución usa el cargador TypeScript nativo del script `test:core`, también utilizado por CI. Los procesos de prueba se ejecutan fuera del sandbox del asistente porque este impedía observar sus barreras/stdout; sus datos y efectos permanecen en temporales y en el checkout de validación. No se usaron credenciales reales ni inferencias remotas.
+
+**Límites:** estas pruebas no acreditan garantía universal de exactly-once, tolerancia a fallo físico del disco, coordinación multi-host, restauración coherente desde backups ni conciliación externa. Una operación incierta queda detenida. El workflow existente descubrirá los nuevos tests automáticamente; su ejecución hospedada para este incremento queda pendiente. El run exitoso histórico de CI no valida estos cambios.
 
 ## Evidencia histórica disponible de 0.3.1
 
@@ -112,7 +134,7 @@ Esto **no** demuestra que una operación no idempotente sea reconciliable tras c
 - Revocar grant durante interrupción: revalidación impide uso.
 - Inyectar instrucciones maliciosas dentro del resultado de una herramienta: no deben cambiar políticas.
 - Simular datos confidenciales y ruta cloud sin consentimiento: no debe transmitirse contenido.
-- Simular caída inmediatamente después de efecto: resultado `uncertain` o conciliado, jamás reejecución a ciegas.
+- Ampliar la caída después del efecto a adaptadores externos: el caso de escritura local ya produce `uncertain` sin reejecución; conciliación aún pendiente.
 - Generar contenido contradictorio: memoria no publica hipótesis como hecho.
 - Probar recuperación a partir de backup y reconstrucción de índices con identidades estables.
 

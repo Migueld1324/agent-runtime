@@ -1,6 +1,6 @@
 import type { ToolDescriptor } from '../v2/registry.ts';
 import type { ToolArguments } from '../v2/tools.ts';
-export type Observation = { toolId: string; args: ToolArguments; result: string };
+export type Observation = { invocationId?: string; toolId: string; args: ToolArguments; result: string };
 export type ModelAction =
   | { kind: 'tool'; toolId: string; args: ToolArguments }
   | { kind: 'final'; text: string };

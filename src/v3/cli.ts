@@ -14,6 +14,8 @@ function usage(): never {
   npm run agent:v3 -- approve <id> [--remember workspace]
   npm run agent:v3 -- deny <id>
   npm run agent:v3 -- retry-verification <id>
+  npm run agent:v3 -- recover <id> [--request-id ID]
+  npm run agent:v3 -- migrate <id> [--expect-file FILE.md --expect-content CONTENT]
   npm run agent:v2 -- tools register examples/text-transform.tool.json   (register first)
   npm run agent:v2 -- grants list|revoke text.transform`);
   process.exit(1);
@@ -24,7 +26,8 @@ function flag(key: string, fallback?: string): string | undefined {
   if (idx + 1 >= process.argv.length) usage();
   return process.argv[idx + 1];
 }
-function printSnapshot(snapshot: {values?: Record<string,unknown>;next?:readonly string[]}) {
+function printSnapshot(snapshot: {values?: Record<string,unknown>;next?:readonly string[];
+  operations?: {identityMatches:boolean;invocations:{id:string;status:string;grantStatus:string}[]}}) {
   const s = snapshot.values ?? {};
   if (!s.runId) {console.log('Run: NOT_FOUND');return;}
   const waiting = snapshot.next?.includes('authorization') && s.status === 'tool_proposed';
@@ -33,7 +36,16 @@ function printSnapshot(snapshot: {values?: Record<string,unknown>;next?:readonly
   console.log(`Tool calls: ${s.toolCount ?? 0}/5`);
   console.log(`Status: ${waiting ? 'WAITING_APPROVAL' : String(s.status || 'IN_PROGRESS').toUpperCase()}`);
   console.log(`Result: ${s.result ?? '—'}`);
-  if (s.stateVersion !== 1 && s.status === 'completed') console.log('Verification: LEGACY — objective not verified');
+  if (![1,2].includes(Number(s.stateVersion)) && s.status === 'completed') console.log('Verification: LEGACY — objective not verified');
+  if (s.runtimeError) {
+    const e=s.runtimeError as {phase:string;code:string;retryable:boolean;message:string};
+    console.log(`Error: ${e.phase}/${e.code}; retryable: ${e.retryable}; ${e.message}`);
+  }
+  console.log(`Recovery budget: ${s.recoveryCount ?? 0}/2`);
+  if(snapshot.operations) {
+    if(!snapshot.operations.identityMatches)console.log('Storage: MISSING OR MISMATCHED — continuation blocked');
+    for(const entry of snapshot.operations.invocations)console.log(`Invocation: ${entry.id} ${entry.status}; grant: ${entry.grantStatus}`);
+  }
   if (s.verification) {
     const v = s.verification as {outcome:string;reason:string;checkedAt:string;retryable:boolean};
     console.log(`Verification: ${v.outcome} (${v.reason}) at ${v.checkedAt}`);
@@ -50,7 +62,7 @@ function printSnapshot(snapshot: {values?: Record<string,unknown>;next?:readonly
 }
 async function main() {
   const [command,id] = process.argv.slice(2);
-  if (!['start','status','approve','deny','retry-verification'].includes(command) || !/^[a-zA-Z0-9_-]{1,60}$/.test(id ?? '')) usage();
+  if (!['start','status','approve','deny','retry-verification','recover','migrate'].includes(command) || !/^[a-zA-Z0-9_-]{1,60}$/.test(id ?? '')) usage();
   const graph = await createGraphV3();
   const config = {configurable:{thread_id:id!},recursionLimit:35};
   const snap = await graph.getState(config);
@@ -72,13 +84,26 @@ async function main() {
     return;
   }
   if (command === 'status') {printSnapshot(snap);return;}
+  if(command==='migrate') {
+    const fileName=flag('--expect-file'),expectedContent=flag('--expect-content');
+    const criterion=fileName!==undefined || expectedContent!==undefined
+      ? validateCriterion({id:'objective-file',kind:'workspace.file_content',version:1,fileName,expectedContent}) : undefined;
+    await graph.migrate(config,criterion);
+    printSnapshot(await graph.getState(config));
+    return;
+  }
+  if(command==='recover') {
+    await graph.recover(config,flag('--request-id'));
+    printSnapshot(await graph.getState(config));
+    return;
+  }
   assertObjective(snap.values as {stateVersion:number;criterionHash:string;criterion:ObjectiveCriterion;
     runId:string;objective:string;scopeId:string});
   if (command === 'retry-verification') {
     if (snap.next?.[0] !== 'verification_recovery' || snap.values.status !== 'paused' || !snap.values.verification?.retryable) {
       throw new Error('No safe verification recovery available');
     }
-    await graph.invoke(new Command({resume:{action:'retry_verification',runId:id!,criterionHash:snap.values.criterionHash}}),config);
+    await graph.invoke(new Command({resume:{action:'retry_verification',runId:id!,criterionHash:snap.values.criterionHash,requestId:flag('--request-id')}}),config);
     printSnapshot(await graph.getState(config));
     return;
   }

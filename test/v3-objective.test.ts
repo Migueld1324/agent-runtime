@@ -128,7 +128,7 @@ test('verification evidence persists after approved write and graph recreation',
     graph=await createGraphV3(options);
     const end=await graph.getState(config);
     assert.equal(end.values.status,'completed');
-    assert.equal(end.values.stateVersion,1);
+    assert.equal(end.values.stateVersion,2);
     assert.equal(end.values.verification.outcome,'passed');
     assert.equal(end.values.verification.criterionHash,end.values.criterionHash);
     assert.ok(end.values.verification.checkedAt);
@@ -176,9 +176,8 @@ for (const recover of [true,false]) test(`verification recovery ${recover ? 'suc
     assert.deepEqual(snap.next,['verification_recovery']);
     assert.equal(checks,1,'no automatic retry');
     assert.equal(await readFile(f.path,'utf8'),'VERIFIED');
-    const rejected=await graph.invoke(new Command({resume:{action:'retry_verification',runId:'wrong',
-      criterionHash:snap.values.criterionHash}}),config);
-    assert.ok('__interrupt__' in rejected);
+    await assert.rejects(()=>graph.invoke(new Command({resume:{action:'retry_verification',runId:'wrong',
+      criterionHash:snap.values.criterionHash}}),config),/does not match/);
     assert.equal((await graph.getState(config)).values.recoveryCount,0);
     assert.equal(checks,1);
     for(let attempt=1;attempt <= (recover ? 1 : 2);attempt++) {
