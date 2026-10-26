@@ -7,6 +7,10 @@ import type { ToolDescriptor } from './registry.ts';
 
 export type ToolArguments = { fileName?: string; content?: string; input?: string; operation?: string };
 export function validateToolArguments(tool: ToolDescriptor, args: ToolArguments): void {
+  if (!args || typeof args !== 'object' || Array.isArray(args)) throw new Error('Invalid tool arguments');
+  const allowed = tool.adapter === 'builtin.text.transform' ? ['input', 'operation']
+    : tool.adapter === 'builtin.filesystem.write' ? ['fileName', 'content'] : ['fileName'];
+  if (Object.keys(args).some(key => !allowed.includes(key))) throw new Error('Unexpected tool argument');
   if (tool.adapter === 'builtin.text.transform') {
     if (typeof args.input !== 'string' || args.input.length < 1 || args.input.length > 2_048 ||
         typeof args.operation !== 'string' || !tool.operations?.includes(args.operation as 'uppercase')) {

@@ -16,7 +16,11 @@ Probar el **runtime como autoridad efectiva**, no solo obtener un texto plausibl
 | Memory | Admission, fuentes, relaciones, scopes, rectificaciones, recall y forget |
 | Fallos | Crash entre ejecución y checkpoint, idempotencia, cambios de grants/modelos |
 
-## Evidencia disponible de 0.3.1
+## Evidencia de cierre del 26-10-2026
+
+Los seis casos de cierre se evaluaron y pasaron. Los ensayos reales, nuevas pruebas deterministas, regresiones y límites están en [poc-031-closure.md](poc-031-closure.md). PoC 0.3.1 queda cerrada dentro de su alcance.
+
+## Evidencia histórica disponible de 0.3.1
 
 ```fish
 npm run typecheck
