@@ -1,5 +1,7 @@
 # Agent Runtime — PoC 0.3: LLM-selected tools, durable approval
 
+> Historical PoC reference. Current v3 runs additionally require `--expect-file` and `--expect-content`; see [current execution guide](docs/guides/getting-started.md).
+
 This builds **on the PoC 0.2 already verified on your CachyOS** and leaves its files and commands intact. It adds `src/v3/`, with a bounded, sequential planner. The planner may request tools but **can never execute them directly**. LangGraph checkpoints and the existing ToolRegistry + Policy Gateway control each invocation.
 
 **Status of validation:** Pure v3 unit tests run successfully in the build environment. The complete LangGraph + SQLite test and real cloud API integration **must be validated on your machine**; packages could not be downloaded into the build environment. The mock provider is deterministic test logic **not** an LLM, while cloud calls use real providers via Vercel AI SDK.

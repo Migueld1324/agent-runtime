@@ -1,4 +1,4 @@
-# Registro de decisiones arquitectónicas (ADR-001–084)
+# Registro de decisiones arquitectónicas (ADR-001–085)
 
 Este registro redacta cada decisión como parte de la **especificación de arquitectura**; no es una copia de turnos. Sus fundamentos se explican en las especificaciones de componentes y los capítulos siguientes. Los IDs son históricos y se conservan.
 
@@ -9,6 +9,10 @@ Este registro redacta cada decisión como parte de la **especificación de arqui
 - [Modelos y Hybrid Routing](model-provider.md) — ADR-022 a ADR-037
 - [Memoria y herramientas](memory-and-tools.md) — ADR-038 a ADR-057
 - [Políticas y Agent Runtime](policy-and-runtime.md) — ADR-058 a ADR-084
+
+## Enmiendas posteriores al baseline
+
+- [ADR-085 — Fallos explícitos y recuperación controlada](085-runtime-failures-and-recovery.md): **aceptada, implementación incremental**. El primer verificador de objetivos está implementado; el resto de la recuperación se detalla como pendiente en la ADR.
 
 ## Excepciones y precedencia
 
@@ -105,3 +109,4 @@ Este registro redacta cada decisión como parte de la **especificación de arqui
 | [ADR-082](policy-and-runtime.md#adr-082) | Eventos observables para cualquier interfaz | Baseline de diseño |
 | [ADR-083](policy-and-runtime.md#adr-083) | Consolidación de experiencias al cerrar una ejecución | Baseline de diseño |
 | [ADR-084](policy-and-runtime.md#adr-084) | Extensibilidad multiagente sin dependencia inicial | Baseline de diseño |
+| [ADR-085](085-runtime-failures-and-recovery.md) | Fallos explícitos y recuperación controlada del runtime | Aceptada; implementación incremental |

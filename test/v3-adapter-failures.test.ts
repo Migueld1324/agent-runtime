@@ -56,6 +56,7 @@ test('full ChatGPT adapter failures persist without effects or commercial fallba
       const graph=await createGraphV3({checkpointPath:join(dir,'runs.sqlite')});
       const config={configurable:{thread_id:c.name}};
       await assert.rejects(()=>graph.invoke({runId:c.name,objective:'synthetic failure test',modelId:'chatgpt',
+        criterion:{id:'objective-file',kind:'workspace.file_content',version:1,fileName:'adapter-objective.md',expectedContent:'test'},
         selectionReason:'test',scopeId:'poc-workspace',observations:[],toolCount:0,status:'queued',result:''},config),c.pattern);
       const snap=await (await createGraphV3({checkpointPath:join(dir,'runs.sqlite')})).getState(config);
       assert.equal(snap.values.status,'queued');

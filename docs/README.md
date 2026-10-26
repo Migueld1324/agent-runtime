@@ -1,13 +1,15 @@
 # Documentación técnica de Agent Runtime
 
 **Estado:** arquitectura de referencia definida; implementación incremental en curso.  
-**Base de código contrastada:** PoC 0.3.1 (24-10-2026).  
+**Base de código contrastada:** PoC 0.3.1 y consolidación incremental de ADR-085; ver estado de implementación y evidencia de validación.
 **Alcance:** diseño del asistente local-first, agnóstico de modelos y sistemas operativos; no documentación de un framework de agentes ajeno.
 
 ## Cómo leer esta documentación
 
 | Necesidad | Documento |
 |---|---|
+| Instalar y ejecutar una tarea offline con aprobación y verificación | [Guía inicial](guides/getting-started.md) |
+| Conectar una cuenta y ejecutar inferencia real | [ChatGPT](guides/chatgpt.md) |
 | Comprender el producto, su alcance y restricciones | [Visión y alcance](architecture/vision.md) |
 | Entender módulos, fronteras de confianza y dependencias | [Arquitectura del sistema](architecture/system.md) |
 | Implementar tipos, identidades, capacidades y resultados | [Contratos comunes](specifications/common-contracts.md) |
@@ -17,7 +19,7 @@
 | Implementar seguridad, grants y aprobaciones | [Policy Engine](specifications/policy-engine.md) |
 | Implementar tareas durables, planificación y recuperación | [Agent Runtime](specifications/runtime.md) |
 | Seguir recorridos entre módulos y sus límites | [Flujos entre componentes](architecture/flows.md) |
-| Revisar decisiones y enmiendas históricas | [Registro de decisiones ADR-001–084](decisions/README.md) |
+| Revisar decisiones y enmiendas históricas | [Registro de decisiones ADR-001–085](decisions/README.md) |
 | Consultar progreso, evidencia, limitaciones, pruebas pendientes y cómo retomar | [Estado de implementación y progreso](delivery/current-state.md) |
 | Saber el siguiente orden de construcción | [Plan de entrega](delivery/roadmap.md) |
 | Mantener criterios de aceptación | [Estrategia de verificación](delivery/verification.md) |

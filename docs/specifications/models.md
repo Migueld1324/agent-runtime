@@ -79,6 +79,25 @@ El modelo **propone** llamadas a herramientas; no recibe callbacks de ejecución
 
 No confundir credencial/sesión con el contrato de inferencia; no utilizar un token OAuth personal como sustituto improvisado de una API key en un endpoint no autorizado.
 
+## Protocolo y routing implementados
+
+El adaptador de cuenta en `src/v3/chatgpt-inference.ts` usa la ruta `/v1/responses` con `store:false` y `stream:true`. `siwc-protocol.ts` recolecta el SSE hasta un evento de respuesta completada y rechaza streams truncados, fallidos o incompletos. Su salida de planificación es un objeto JSON de texto: una herramienta registrada con argumentos string o una respuesta final. No es una llamada nativa a funciones con callbacks ejecutables.
+
+Los wrappers comerciales en `src/v3/models.ts` sí exponen esquemas de herramientas al SDK, pero sin handlers `execute`. El modelo, cualquiera que sea su proveedor, no autoriza ni ejecuta herramientas. Registry, validación de argumentos, hash y policy se aplican después de la propuesta, antes de producir efectos. Una respuesta final activa la verificación del objetivo descrita en [runtime](runtime.md); tampoco acredita éxito por sí sola.
+
+| Selector | Configuración / autenticación | Conducta actual |
+|---|---|---|
+| `mock` | Ninguna | Fixture determinista offline; no es un LLM local |
+| `chatgpt` | Cuenta SIWC conectada, consentimiento y modelo seleccionado | Inferencia remota mediante cuenta; no requiere API key comercial |
+| `openai` | `OPENAI_API_KEY` y `OPENAI_MODEL` | API opcional al seleccionarla y configurarla |
+| `anthropic` | `ANTHROPIC_API_KEY` y `ANTHROPIC_MODEL` | API opcional al seleccionarla y configurarla |
+| `google` | `GOOGLE_GENERATIVE_AI_API_KEY` y `GOOGLE_MODEL` | API opcional al seleccionarla y configurarla |
+| `auto` | Variables de entorno y conexiones disponibles | Offline `mock` salvo `AGENT_ALLOW_CLOUD=1`; con opt-in elige el primer proveedor configurado de la prioridad |
+
+La prioridad cloud predeterminada es `chatgpt,openai,anthropic,google`; `AGENT_AUTO_PRIORITY` permite delimitarla. Si no hay un proveedor configurado elegible, `auto` permanece en `mock`. Esta selección inicial no es fallback ante una inferencia fallida ni routing por calidad. Errores de autenticación, cuota o red no cambian silenciosamente el proveedor seleccionado.
+
+Los pasos de login, catálogo, elección de modelo, logout, elegibilidad y ensayo manual se mantienen en [la guía de ChatGPT](../guides/chatgpt.md), junto con las referencias SIWC de la PoC. Los resultados realmente ejecutados están en [verificación](../delivery/verification.md); las limitaciones históricas del contenedor de construcción no invalidan la evidencia posterior del host o de CI.
+
 ## Streaming, cancelación y telemetría
 
 ```ts
