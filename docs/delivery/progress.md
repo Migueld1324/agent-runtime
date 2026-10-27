@@ -39,4 +39,4 @@ Integración comprobada el 27-10-2026 mediante la API de GitHub: [PR #4](https:/
 
 ## Siguiente trabajo
 
-Continuar la Fase 0 de [roadmap.md](roadmap.md): analizar alternativas mínimas para validación extensible del Tool Gateway y aprobar el contrato antes de implementarlo. La concurrencia entre runs, conciliación de efectos externos, MemoryService híbrido, Context Manager estructurado y routing por capacidades permanecen pendientes.
+Continuar la Fase 0 de [roadmap.md](roadmap.md): revisar [ADR-087](../decisions/087-tool-gateway-input-contract.md), propuesta de validación extensible del Tool Gateway preparada sobre `ab22823`. Incluye alternativas, perfil inicial de `inputSchema`, conservación de huellas legado, migración explícita y pruebas de aceptación. **No está aprobada ni implementada.** Tras revisar el contrato, el primer incremento propuesto es validación común y compatibilidad; la migración administrativa se entrega por separado. La concurrencia entre runs, conciliación de efectos externos, MemoryService híbrido, Context Manager estructurado y routing por capacidades permanecen pendientes.

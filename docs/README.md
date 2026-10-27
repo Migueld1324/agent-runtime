@@ -19,7 +19,7 @@
 | Implementar seguridad, grants y aprobaciones | [Policy Engine](specifications/policy-engine.md) |
 | Implementar tareas durables, planificación y recuperación | [Agent Runtime](specifications/runtime.md) |
 | Seguir recorridos entre módulos y sus límites | [Flujos entre componentes](architecture/flows.md) |
-| Revisar decisiones y enmiendas históricas | [Registro de decisiones ADR-001–086](decisions/README.md) |
+| Revisar decisiones y enmiendas históricas | [Registro de decisiones ADR-001–087](decisions/README.md) |
 | Consultar progreso, evidencia, limitaciones, pruebas pendientes y cómo retomar | [Estado de implementación y progreso](delivery/current-state.md) |
 | Saber el siguiente orden de construcción | [Plan de entrega](delivery/roadmap.md) |
 | Mantener criterios de aceptación | [Estrategia de verificación](delivery/verification.md) |
