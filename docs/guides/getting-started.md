@@ -69,9 +69,32 @@ Solo si el diagnóstico indica una comprobación transitoria recuperable:
 npm run agent:v3 -- retry-verification demo-verified-1
 ```
 
-Se permiten como máximo dos recuperaciones explícitas. Esta ruta repite la comprobación y conserva las observaciones; no vuelve al modelo ni reejecuta herramientas. No permite reintentar escrituras inciertas.
+Se permiten como máximo dos recuperaciones explícitas por run, compartidas entre inferencia, verificación y reparación de continuidad. Esta ruta repite la comprobación y conserva las observaciones; no vuelve al modelo ni reejecuta herramientas. No permite reintentar escrituras inciertas.
 
-Los checkpoints antiguos siguen consultables. Un `COMPLETED` legado se etiqueta como no verificado; continuar ejecuciones antiguas requiere una migración explícita, todavía pendiente. La recuperación general de fallos de inferencia/Executor y los marcadores durables de efectos inciertos siguen pendientes de [ADR-085](../decisions/085-runtime-failures-and-recovery.md).
+## Recuperación tras fallo o interrupción
+
+Consultar primero `status`. Expone fase/código del error, elegibilidad de recuperación, presupuesto compartido e invocaciones durables. Cuando el modelo falla de forma recuperable, corregir la causa —por ejemplo, volver a autenticar la misma cuenta— y solicitar un intento explícito:
+
+```bash
+npm run agent:v3 -- recover demo-verified-1 --request-id recovery-1
+npm run agent:v3 -- status demo-verified-1
+```
+
+Usar un ID de orden nuevo para cada intento autorizado. Un ID ya despachado se rechaza; repetirlo no duplica la recuperación. El proveedor y el objetivo permanecen fijados. Sin `--request-id`, el CLI genera uno nuevo.
+
+Después de una interrupción, el registro de invocaciones determina qué puede recuperarse. Una herramienta confirmada restaura su observación sin volver a ejecutarse. Si nunca se reclamó el Executor, se solicita consentimiento nuevo. Una invocación iniciada sin resultado confirmado queda `uncertain` y `PAUSED`, sin reintento ni comprobación del objetivo para omitir esa incertidumbre. Su conciliación sigue pendiente. Un fallo al guardar el grant conserva el resultado y requiere inspección; no se concede automáticamente al recuperar.
+
+Solo un comando mutante v3 puede estar activo a la vez, incluso para runs distintos. `Runtime busy` indica que otra ejecución tiene el control; `status` sigue disponible. No borrar `runtime-control.sqlite` para forzar el acceso. `runtime-v3.sqlite`, `runtime-operations.sqlite` y `runtime-control.sqlite` cumplen funciones diferentes; no reemplazar uno por una base vacía cuando una recuperación falle. Ledger ausente/ajeno bloquea la continuación.
+
+## Checkpoints anteriores
+
+Los checkpoints antiguos siguen consultables. Solo `COMPLETED` v0 sin evidencia se muestra como no verificado; una verificación v1 conserva su significado. Para una aprobación pendiente demostrablemente segura o una verificación pendiente v1:
+
+```bash
+npm run agent:v3 -- migrate demo-verified-1
+```
+
+Un checkpoint v0 sin criterio requiere además `--expect-file` y `--expect-content`, con el objetivo aceptado por el solicitante. La migración conserva el historial y el presupuesto, y exige una aprobación nueva cuando corresponde. No admite versiones desconocidas, terminales ni ejecuciones antiguas ambiguas. Consultar [ADR-086](../decisions/086-durable-invocations-and-recovery.md) para las invariantes; no borrar bases para actualizar.
 
 ## Permisos persistentes
 

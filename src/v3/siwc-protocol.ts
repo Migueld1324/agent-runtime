@@ -1,11 +1,12 @@
+import { ModelFailure } from './failures.ts';
 import type { ToolDescriptor } from '../v2/registry.ts';
 import type { ModelAction } from './mock.ts';
 
 export function parseModelProposal(raw: string, tools: ToolDescriptor[]): ModelAction {
   const cleaned = raw.trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'');
   let value: unknown;
-  try { value = JSON.parse(cleaned); } catch { throw new Error('ChatGPT returned malformed proposal JSON. Nothing executed.'); }
-  if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('Proposal is not an object.');
+  try { value = JSON.parse(cleaned); } catch { throw new ModelFailure('INVALID_ARGUMENT',false,'ChatGPT returned malformed proposal JSON. Nothing executed.'); }
+  if (!value || typeof value !== 'object' || Array.isArray(value)) throw new ModelFailure('INVALID_ARGUMENT',false,'Proposal is not an object.');
   const p = value as Record<string,unknown>;
   if (p.kind === 'final' && Object.keys(p).every(k=>['kind','text'].includes(k)) && typeof p.text === 'string' && p.text.trim()) return {kind:'final',text:p.text.trim()};
   if (p.kind === 'tool' && typeof p.toolId === 'string' && tools.some(t=>t.id===p.toolId)
@@ -13,7 +14,7 @@ export function parseModelProposal(raw: string, tools: ToolDescriptor[]): ModelA
     && p.args && typeof p.args === 'object' && !Array.isArray(p.args)
     && Object.values(p.args).every(v=>typeof v==='string'))
     return {kind:'tool',toolId:p.toolId,args:p.args as Record<string,string>};
-  throw new Error('Unknown or invalid tool proposal. Nothing executed.');
+  throw new ModelFailure('INVALID_ARGUMENT',false,'Unknown or invalid tool proposal. Nothing executed.');
 }
 
 /** Collect the SSE terminal event and reject truncated / failed streams. */
@@ -39,7 +40,7 @@ export async function collectSIWCStream(stream: ReadableStream<Uint8Array>): Pro
         try {event=JSON.parse(data) as Record<string,unknown>;} catch {throw new Error('Malformed ChatGPT SSE event.');}
         if (event.type === 'response.output_text.delta' && typeof event.delta==='string') responseText+=event.delta;
         if (event.type === 'response.failed' || event.type === 'response.incomplete' || event.type === 'error')
-          throw new Error(`ChatGPT inference failed (${String(event.type)}). No fallback.`);
+          throw new ModelFailure('UNAVAILABLE',false,`ChatGPT inference failed (${String(event.type)}). No fallback.`);
         if (event.type === 'response.completed') {
           completed = true;
           // Response contains a complete output array. Prefer it when deltas were not emitted.
@@ -51,7 +52,7 @@ export async function collectSIWCStream(stream: ReadableStream<Uint8Array>): Pro
       }
     }
   } finally {reader.releaseLock();}
-  if (!completed) throw new Error('ChatGPT stream ended without response.completed; nothing executed.');
+  if (!completed) throw new ModelFailure('UNAVAILABLE',true,'ChatGPT stream ended without response.completed; nothing executed.');
   if (!responseText.trim()) throw new Error('ChatGPT stream had no text proposal. Nothing executed.');
   return responseText;
 }

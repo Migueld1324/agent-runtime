@@ -1,6 +1,6 @@
 # ADR-085 — Fallos explícitos y recuperación controlada del runtime
 
-**Estado:** aceptada. Implementación incremental: primer verificador de objetivo y recuperación de su lectura implementados; recuperación general y migraciones pendientes.
+**Estado:** aceptada. Implementación incremental: verificador de objetivo, errores de modelo/Executor, invocaciones durables y migración conservadora implementados; conciliación de efectos inciertos pendiente.
 **Acuerdos:** recuperación explícita y acotada, compatibilidad conservadora de checkpoints y detención ante efectos inciertos. `completed` queda reservado a objetivos verificados; se descarta finalizar por mera respuesta del planner.
 **Ámbito:** consolidación del runtime v3 después de PoC 0.3.1.
 **Referencias:** ADR-017/021, ADR-061/066/072 y ADR-073–079/081; [runtime](../specifications/runtime.md), [contratos comunes](../specifications/common-contracts.md), [cierre](../delivery/poc-031-closure.md).
@@ -129,7 +129,7 @@ La migración debe ser explícita, idempotente y verificable, conservando el che
 12. Checkpoints antiguos terminales, pendientes y con errores; versiones desconocidas; adaptación repetida sin duplicación.
 13. Las suites actuales y CI offline siguen pasando. Las aprobaciones y escrituras reales de la PoC conservan su significado, salvo cambios expresamente aprobados.
 
-Esta lista es criterio de aceptación futuro, no evidencia de pruebas añadidas o ejecutadas.
+Esta lista define los criterios del contrato; la evidencia ejecutada y sus límites se registran en [verificación](../delivery/verification.md).
 
 ## Acuerdos e implementación incremental
 
@@ -143,8 +143,12 @@ La comprobación lee hasta 16 KiB + un byte de detección de exceso; rechaza sym
 
 Las excepciones inesperadas del verificador se normalizan como comprobación inconclusa sin retry; fallos transitorios de lectura reconocidos permiten dos recuperaciones explícitas. Una respuesta inválida a la recuperación vuelve a suspender sin consumir el contador ni comprobar de nuevo; el nodo de suspensión no produce efectos.
 
-Continúan pendientes: transiciones generales para errores de modelo/Executor y su clasificación estructurada, inventario y control de retries de SDK, frontera durable previa a efectos, representación operacional de incertidumbre y adaptación explícita de checkpoints antiguos. En este incremento, esos checkpoints son consultables pero no reanudables; `completed` legado se muestra como no verificado. Las excepciones del modelo/Executor conservan por ahora el comportamiento de PoC documentado, sin retry nuevo.
+El segundo incremento implementa esos fallos, marcadores y adaptación explícita mediante [ADR-086](086-durable-invocations-and-recovery.md), con `stateVersion: 2`. Los SDK comerciales usan `maxRetries: 0`; el adaptador ChatGPT realiza un intento de inferencia por orden, con refresh de sesión cuando corresponde y sin fallback comercial. Errores conocidos de autenticación, red, timeout y HTTP 5xx permiten recuperación explícita; 403, 429 y errores no clasificados no se reintentan automáticamente. Las respuestas malformadas terminan en `failed`.
 
-La suite de criterios de aceptación anterior cubre el contrato completo de esta ADR. La cobertura ejecutada del primer incremento está en [verification.md](../delivery/verification.md); no se acreditan como resueltos los puntos pendientes.
+El Executor no tiene retry en este corte. Una prueba confiable de fallo previo a efectos permite `failed`; una excepción de escritura sin confirmación durable produce `uncertain`. Los adaptadores incorporados de lectura/transformación se conocen por implementación, no por etiquetas de efectos suministradas por el modelo. La evidencia ejecutada está en [verification.md](../delivery/verification.md).
 
 La extensibilidad del Gateway requiere su propuesta independiente; no queda aprobada por esta ADR.
+
+## Segundo incremento de consolidación
+
+Aprobados el registro durable con reclamación atómica, las invariantes de confirmación antes de continuar y la recuperación inicialmente limitada a modelo/verificador. [ADR-086](086-durable-invocations-and-recovery.md) concreta almacenamiento, exclusión y compatibilidad; esos detalles técnicos están aprobados e implementados. No cambia la prohibición de reintentar efectos inciertos ni introduce conciliación automática.

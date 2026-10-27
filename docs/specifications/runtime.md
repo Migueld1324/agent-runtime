@@ -4,7 +4,9 @@
 
 ## Consolidación aprobada — ADR-085
 
-[ADR-085](../decisions/085-runtime-failures-and-recovery.md) formaliza fallos, recuperación, incertidumbre y compatibilidad. **Aceptada; implementación incremental.** `completed` exige verificación del objetivo: una respuesta final del modelo solo activa el verificador. Recuperación general, marcadores durables de efectos inciertos y migración de checkpoints siguen pendientes; no confundir el contrato completo aprobado con su primer incremento implementado.
+[ADR-085](../decisions/085-runtime-failures-and-recovery.md) formaliza fallos, recuperación, incertidumbre y compatibilidad. **Aceptada; implementación incremental.** `completed` exige verificación del objetivo: una respuesta final del modelo solo activa el verificador.
+
+[ADR-086](../decisions/086-durable-invocations-and-recovery.md), **aceptada e implementada**, concreta el registro durable de invocaciones, exclusión de comandos y migración conservadora. El modelo/verificador pueden recuperarse explícitamente; el Executor no se reintenta. La conciliación de efectos inciertos permanece pendiente.
 
 ### Contrato de objetivo implementado en v3
 
@@ -18,7 +20,7 @@ interface ObjectiveCriterion {
 }
 ```
 
-El solicitante define un criterio antes de iniciar mediante `--expect-file` y `--expect-content`. No se deriva del texto libre del modelo. Un hash lo vincula al run, objetivo y ámbito; los nodos de propuesta, autorización, ejecución y comprobación verifican esa vinculación. Los checkpoints nuevos contienen `stateVersion: 1`, criterio/hash, evidencia y contador de recuperación.
+El solicitante define un criterio antes de iniciar mediante `--expect-file` y `--expect-content`. No se deriva del texto libre del modelo. Un hash lo vincula al run, objetivo y ámbito; los nodos de propuesta, autorización, ejecución y comprobación verifican esa vinculación. Los checkpoints nuevos contienen `stateVersion: 2`, criterio/hash, evidencia, identidad del ledger, siguiente fase segura y contador de recuperación. El criterio conserva su versión 1.
 
 El verificador resuelve `filesystem.read`, aplica la policy actual y realiza una lectura real y acotada. No acepta rutas arbitrarias, symlinks ni archivos no regulares. Los resultados son `passed`, `failed` o `inconclusive`, con motivo, fecha, hash de criterio y huella del descriptor. Una lectura completa dentro del límite incluye hash de contenido y tamaño observado; la evidencia no duplica el texto.
 
@@ -27,9 +29,36 @@ El verificador resuelve `filesystem.read`, aplica la policy actual y realiza una
 - Denegación de lectura por policy: `denied`.
 - Comprobación inconclusa: `paused`; solo errores de lectura transitorios reconocidos habilitan recuperación.
 
-`retry-verification` requiere una interrupción real en `verification_recovery`, identidad/hash coincidentes y presupuesto disponible. Persiste `recovering` y el contador antes de leer otra vez. Máximo dos recuperaciones; el tercer fallo transitorio termina en `failed`. No vuelve al modelo ni al Executor. Un resultado negativo no activa reparación automática.
+`retry-verification` requiere una interrupción real en `verification_recovery`, identidad/hash coincidentes y presupuesto disponible. Persiste `recovering` y el contador antes de leer otra vez. Máximo dos recuperaciones por run, compartidas con modelo y reparaciones de continuidad; necesitar una tercera termina en `failed`. No vuelve al modelo ni al Executor. Un resultado negativo no activa reparación automática.
 
-Los checkpoints legados siguen consultables, con `completed` antiguo etiquetado como no verificado. Su continuación se bloquea hasta una migración explícita segura. Este incremento verifica un resultado de archivo; no prueba objetivos arbitrarios ni requisitos sobre qué herramientas debieron usarse.
+Los checkpoints legados siguen consultables: `completed` v0 sin evidencia se etiqueta como no verificado; v1 con evidencia conserva su significado. Su continuación se bloquea hasta una migración explícita segura. Este incremento verifica un resultado de archivo; no prueba objetivos arbitrarios ni requisitos sobre qué herramientas debieron usarse.
+
+### Errores, invocaciones y recuperación implementados
+
+| Situación | Estado durable / siguiente acción |
+|---|---|
+| Error conocido recuperable de inferencia | `paused`, error normalizado y `model_recovery`; solo `recover` vuelve al mismo proveedor |
+| Propuesta inválida o error de modelo no recuperable | `failed`; ninguna autorización ni ejecución |
+| Policy denegada o grant revocado antes del efecto | `denied` |
+| Fallo probado antes de efectos del Executor | `failed`; sin retry del Executor |
+| Executor iniciado sin resultado durable | Invocación `uncertain`, run `paused`, `retryable:false`; conciliación pendiente |
+| Resultado confirmado, checkpoint incompleto | `recover` restaura una observación por invocation ID; no vuelve al Executor |
+| Grant fallido o no confirmado después del resultado | Resultado conservado; `paused`, sin retry automático de grant ni herramienta |
+| Persistencia necesaria no disponible | Error de infraestructura; detener, sin afirmar que se guardó un estado nuevo |
+
+`runtime-operations.sqlite` mantiene esquema propio v1 e identidad UUID, vinculada a checkpoints v2. La identidad del run fija criterio y proveedor. Cada invocación usa `(runId, ordinal)` y vincula descriptor, solicitud, scope y criterio. Se reclama con transacción breve antes del Executor; el resultado se confirma antes del grant y del checkpoint. Las observaciones se deduplican por invocation ID.
+
+`runtime-control.sqlite` mantiene una transacción `BEGIN IMMEDIATE` durante cada comando mutante v3. Otro mutante, incluso de otro run, recibe `Runtime busy`; `status` consulta sin recuperar. La muerte del proceso libera el lock SQLite; no borrar el archivo de control. Los tres stores deben permanecer juntos en almacenamiento local; no se acredita recuperación multi-host ni restauración desde copias incoherentes.
+
+La fachada revalida el checkpoint más reciente bajo exclusión y usa durabilidad síncrona de LangGraph. `invoke(null)` no recupera ejecuciones activas; los terminales son consultables sin reabrirse. Una orden `recover --request-id` se registra antes del despacho y consume presupuesto durable. Repetir un ID ya despachado no hace otro intento. Una interrupción antes del despacho puede retomar la misma orden sin consumir de nuevo; si ya fue despachada, se requiere otra orden y presupuesto disponible. No hay retries automáticos configurados en los SDK ni fallback comercial.
+
+Si la interrupción ocurrió antes de reclamar el Executor, `recover` restaura una aprobación nueva, incluso si existía un grant. La recuperación no concede consentimiento. Si falta el ledger vinculado, tiene identidad diferente o se perdió el checkpoint de un run registrado, se bloquea la continuación; no recrear historia vacía.
+
+### Compatibilidad y migración implementadas
+
+`migrate` acepta únicamente una interrupción real de aprobación v0/v1 sin autorización activa ni error ambiguo, o una interrupción recuperable de verificación v1. v0 requiere criterio explícito. v1 conserva criterio, contador y evidencia. La adaptación agrega un checkpoint v2 sin borrar el historial; repetirla es idempotente y una aprobación migrada exige consentimiento nuevo.
+
+Los terminales antiguos se consultan sin migrarlos; `authorized` + `execute` antiguo no demuestra ausencia de efectos y se rechaza. También se rechazan versiones desconocidas y checkpoints con errores ambiguos. Estas reglas no constituyen una migración universal ni conciliación de efectos externos.
 
 ## Responsabilidad
 

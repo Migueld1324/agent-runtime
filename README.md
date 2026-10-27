@@ -12,9 +12,10 @@ La PoC 0.3.1 está cerrada y el proyecto está en consolidación. El runtime act
 - Registro de capacidades, Policy Gateway, permisos persistentes y revocación para las herramientas de demostración.
 - Inferencia mediante cuenta ChatGPT autorizada y adaptadores opcionales de API; modo `mock` offline para pruebas deterministas.
 - Verificación del objetivo antes de completar una tarea: el primer verificador comprueba un archivo Markdown y su contenido esperado.
+- Errores explícitos, registro durable de invocaciones y recuperación acotada sin repetir herramientas con efectos inciertos.
 - Pruebas unitarias, de contratos e integración, con CI offline en pull requests hacia `main`.
 
-La memoria híbrida, el Context Manager completo y el routing por capacidades/métricas siguen pendientes. También faltan recuperación general de errores, migración de checkpoints antiguos y reconciliación de efectos inciertos. El alcance actual y su evidencia están en [estado de implementación](docs/delivery/current-state.md) y [progreso](docs/delivery/progress.md).
+La memoria híbrida, el Context Manager completo y el routing por capacidades/métricas siguen pendientes. La recuperación cubre modelo/verificador y migraciones conservadoras; la reconciliación de efectos inciertos y la validación extensible del Gateway siguen pendientes. El alcance actual y su evidencia están en [estado de implementación](docs/delivery/current-state.md) y [progreso](docs/delivery/progress.md).
 
 ## Primeros pasos
 

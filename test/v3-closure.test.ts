@@ -81,16 +81,17 @@ test('invalid proposals never reach approval or execution; checkpoint remains in
       const graph=await createGraphV3({checkpointPath:join(dir,'checkpoint.sqlite'),
         decide:async()=>parseModelProposal(JSON.stringify(proposal),tools)});
       const config={configurable:{thread_id:`invalid-${i}`}};
-      await assert.rejects(()=>graph.invoke({runId:`invalid-${i}`,objective:'invalid test',modelId:'mock',
+      await graph.invoke({runId:`invalid-${i}`,objective:'invalid test',modelId:'mock',
         selectionReason:'test',criterion:{id:'objective-file',kind:'workspace.file_content',version:1,fileName:'closure-objective.md',expectedContent:'test'},
-      scopeId:'poc-workspace',observations:[],toolCount:0,status:'queued',result:''},config));
+      scopeId:'poc-workspace',observations:[],toolCount:0,status:'queued',result:''},config);
       const snap=await graph.getState(config);
       assert.equal(snap.values.toolCount,0);
       assert.deepEqual(snap.values.observations,[]);
-      assert.equal(snap.values.authorized,undefined);
+      assert.equal(snap.values.authorized,false);
+      assert.equal(snap.values.status,'failed');
+      assert.equal(snap.values.runtimeError?.retryable,false);
       assert.ok(!snap.next.includes('authorization'));
-      assert.equal(snap.tasks.length,1);
-      assert.ok(snap.tasks[0].error);
+      assert.deepEqual(snap.next,[]);
       await assert.rejects(()=>readFile(join(WORKSPACE_DIR,file)),{code:'ENOENT'});
     }
   } finally {await rm(dir,{recursive:true,force:true});}

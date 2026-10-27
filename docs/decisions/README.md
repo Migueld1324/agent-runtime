@@ -1,4 +1,4 @@
-# Registro de decisiones arquitectónicas (ADR-001–085)
+# Registro de decisiones arquitectónicas (ADR-001–086)
 
 Este registro redacta cada decisión como parte de la **especificación de arquitectura**; no es una copia de turnos. Sus fundamentos se explican en las especificaciones de componentes y los capítulos siguientes. Los IDs son históricos y se conservan.
 
@@ -12,7 +12,9 @@ Este registro redacta cada decisión como parte de la **especificación de arqui
 
 ## Enmiendas posteriores al baseline
 
-- [ADR-085 — Fallos explícitos y recuperación controlada](085-runtime-failures-and-recovery.md): **aceptada, implementación incremental**. El primer verificador de objetivos está implementado; el resto de la recuperación se detalla como pendiente en la ADR.
+- [ADR-085 — Fallos explícitos y recuperación controlada](085-runtime-failures-and-recovery.md): **aceptada, implementación incremental**. Verificador, errores explícitos y recuperación conservadora implementados; conciliación pendiente.
+
+- [ADR-086 — Persistencia de invocaciones y exclusión de ejecución](086-durable-invocations-and-recovery.md): **aceptada e implementada**; concreta almacenamiento, exclusión, recuperación y migración conservadora.
 
 ## Excepciones y precedencia
 
@@ -110,3 +112,4 @@ Este registro redacta cada decisión como parte de la **especificación de arqui
 | [ADR-083](policy-and-runtime.md#adr-083) | Consolidación de experiencias al cerrar una ejecución | Baseline de diseño |
 | [ADR-084](policy-and-runtime.md#adr-084) | Extensibilidad multiagente sin dependencia inicial | Baseline de diseño |
 | [ADR-085](085-runtime-failures-and-recovery.md) | Fallos explícitos y recuperación controlada del runtime | Aceptada; implementación incremental |
+| [ADR-086](086-durable-invocations-and-recovery.md) | Persistencia de invocaciones y exclusión de ejecución | Aceptada e implementada |
