@@ -100,7 +100,15 @@ Las pruebas existentes del adaptador simulan autenticación, red, timeout, error
 
 La ejecución usa el cargador TypeScript nativo del script `test:core`, también utilizado por CI. Los procesos de prueba se ejecutan fuera del sandbox del asistente porque este impedía observar sus barreras/stdout; sus datos y efectos permanecen en temporales y en el checkout de validación. No se usaron credenciales reales ni inferencias remotas.
 
-**Límites:** estas pruebas no acreditan garantía universal de exactly-once, tolerancia a fallo físico del disco, coordinación multi-host, restauración coherente desde backups ni conciliación externa. Una operación incierta queda detenida. El workflow existente descubrirá los nuevos tests automáticamente; su ejecución hospedada para este incremento queda pendiente. El run exitoso histórico de CI no valida estos cambios.
+### Cierre e integración comprobados el 27-10-2026
+
+[PR #4](https://github.com/Migueld1324/agent-runtime/pull/4) integrado en `main` el **27-10-2026 a las 08:52:24 UTC**, commit de integración `a7b5c02676c9cfab4830e2e2170c0a46b1fac4ce`. La comprobación se hizo mediante la API de GitHub.
+
+[Offline CI — run 40324649673](https://github.com/Migueld1324/agent-runtime/actions/runs/40324649673), intento **1**, evento `pull_request`, commit fuente `b8758e94b4c66e9aced499425c547715e5bd5cd6`: **completed / success**. El [job 121578120058](https://github.com/Migueld1324/agent-runtime/actions/runs/40324649673/job/121578120058) acredita `success` para instalación desde lockfile, typecheck, pruebas del núcleo/proveedores y las tres integraciones v1/v2/v3. Esta evidencia corresponde al incremento de ADR-086, separado del run histórico de CI; no se atribuye un conteo de tests a logs remotos no inspeccionados.
+
+Revalidación local del 27-10-2026 sobre `b8758e9`, en copia temporal aislada con Node v24.22.1 y npm 11.19.1: typecheck **PASS**, `test:core` **51/51 PASS** e integraciones v1/v2/v3 secuenciales **PASS**. Se reutilizó `node_modules` por enlace, sin instalación nueva, claves comerciales ni inferencia remota. El intento de pruebas del núcleo dentro del sandbox quedó bloqueado y se interrumpió; la integración inicial fue rechazada por `EPERM` en el IPC de tsx. Las ejecuciones completas satisfactorias se realizaron fuera del sandbox, manteniendo datos y autenticación en la copia temporal. No se modificó código de runtime para esta revalidación.
+
+**Límites:** estas pruebas no acreditan garantía universal de exactly-once, tolerancia a fallo físico del disco, coordinación multi-host, restauración coherente desde backups ni conciliación externa. Una operación incierta queda detenida. El incremento de ADR-086 está integrado y validado dentro de ese alcance; la consolidación completa de Fase 0 continúa.
 
 ## Evidencia histórica disponible de 0.3.1
 
