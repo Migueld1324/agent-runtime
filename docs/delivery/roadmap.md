@@ -13,7 +13,7 @@ El plan separa **arquitectura estable** de **cortes incrementales verificables**
 - Separar configuración/credenciales de datos compartibles y de exportación.
 - Añadir diagnóstico de fallos y eventos estructurados sin almacenar secretos.
 
-**Avance:** CI, verificador de archivo/contenido y recuperación durable conservadora implementados (ADR-085/086). La evidencia ejecutada está en [verificación](verification.md). El próximo diseño a revisar es la validación extensible del Tool Gateway, antes de implementar cambios de contrato.
+**Avance:** CI, verificador de archivo/contenido y recuperación durable conservadora implementados (ADR-085/086). Recuperación durable integrada por PR #4 el 27-10-2026, con CI hospedada satisfactoria. La evidencia ejecutada está en [verificación](verification.md). El próximo diseño a revisar es la validación extensible del Tool Gateway, antes de implementar cambios de contrato.
 
 **Salida:** suite actual sigue verde; prueba manual real de `approve` y `deny` no cambia de significado.
 

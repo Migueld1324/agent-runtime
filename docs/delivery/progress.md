@@ -1,6 +1,6 @@
 # Registro de progreso
 
-Fecha de actualización: 26-10-2026. Versión del proyecto: PoC 0.3.1.
+Fecha de actualización: 27-10-2026. Versión del proyecto: PoC 0.3.1.
 
 ## Estado actual
 
@@ -35,6 +35,8 @@ Base `ba88410`, con PR #3 integrado. [ADR-086](../decisions/086-durable-invocati
 
 La evidencia de typecheck, pruebas y las tres integraciones se registra en [verificación](verification.md#recuperación-durable--adr-086). No se atribuye al run hospedado anterior la validación de este incremento.
 
+Integración comprobada el 27-10-2026 mediante la API de GitHub: [PR #4](https://github.com/Migueld1324/agent-runtime/pull/4) integrado en `main` a las 08:52:24 UTC, commit `a7b5c02676c9cfab4830e2e2170c0a46b1fac4ce`. Su commit fuente `b8758e94b4c66e9aced499425c547715e5bd5cd6` pasó [Offline CI, run 40324649673](https://github.com/Migueld1324/agent-runtime/actions/runs/40324649673), intento 1, con instalación, typecheck, pruebas e integraciones en `success`. El incremento de recuperación durable queda cerrado dentro del alcance de ADR-086; la Fase 0 continúa.
+
 ## Siguiente trabajo
 
-Continuar la Fase 0 de [roadmap.md](roadmap.md): revisión del incremento de recuperación durable en un PR independiente; después, analizar alternativas mínimas para validación extensible del Tool Gateway y aprobar el contrato antes de implementarlo. La concurrencia entre runs, conciliación de efectos externos, MemoryService híbrido, Context Manager estructurado y routing por capacidades permanecen pendientes.
+Continuar la Fase 0 de [roadmap.md](roadmap.md): analizar alternativas mínimas para validación extensible del Tool Gateway y aprobar el contrato antes de implementarlo. La concurrencia entre runs, conciliación de efectos externos, MemoryService híbrido, Context Manager estructurado y routing por capacidades permanecen pendientes.
