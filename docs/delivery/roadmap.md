@@ -17,7 +17,7 @@ El plan separa **arquitectura estable** de **cortes incrementales verificables**
 
 **Salida:** suite actual sigue verde; prueba manual real de `approve` y `deny` no cambia de significado.
 
-**Propuesta pendiente de revisión:** [ADR-087 — Validación extensible del Tool Gateway](../decisions/087-tool-gateway-input-contract.md). Describe validación común con compatibilidad legado y un segundo incremento de migración administrativa; no constituye implementación ni aprobación del contrato.
+**Propuesta pendiente de revisión:** [ADR-087 — Validación extensible del Tool Gateway](../decisions/087-tool-gateway-input-contract.md). Describe validación común con compatibilidad legado y un segundo incremento de migración administrativa, condicionado a un backend de mantenimiento que excluya también procesos antiguos mediante controles del sistema operativo. La revisión incluye no ampliación de entradas y separación entre identidad del descriptor y solicitud; no constituye implementación ni aprobación del contrato.
 
 ## Fase 1 — Common Contracts y registro de capacidades
 
