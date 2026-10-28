@@ -38,6 +38,8 @@ El archivo de referencia fue la exportación Markdown de la conversación «Solu
 
 ## Investigación arquitectónica posterior — Maintenance Backend
 
+**Estado actual — 28-10-2026:** el responsable del proyecto confirmó explícitamente fuera del repositorio la aprobación arquitectónica de ADR-087 Incremento 1 y ADR-088, con esa fecha. El [registro de aprobación](../decisions/087-increment-1-approval.md) documenta su procedencia, alcance y secuencia: PR #9 exclusivamente documental y, después de integrarlo, implementación del Incremento 1 en un PR independiente sin nueva ratificación. No se deduce aprobación del merge ni de una revisión GitHub inexistente. Incremento 2 y operaciones reales de mantenimiento no autorizados. El párrafo siguiente conserva el antecedente de la investigación inicial, no el estado vigente de aprobación.
+
 La propuesta [ADR-088](../decisions/088-maintenance-backend.md), del 27-10-2026, procede de inspección del repositorio en `5aa4eac`, de ADR-085/086 aceptadas y de la dependencia pendiente de ADR-087. El [análisis](../architecture/maintenance-backend-analysis.md) identifica módulos, amenazas, alternativas y fuentes primarias consultadas; el [plan](maintenance-backend-plan.md) separa aceptación futura de evidencia existente. No se atribuye esta propuesta a los acuerdos históricos ni se considera aprobada por estar en el registro. ADR-085/086/087 conservan su contenido; las ampliaciones propuestas se identifican en ADR-088.
 
 ## Datos sensibles y publicación
