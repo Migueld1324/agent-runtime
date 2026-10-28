@@ -27,6 +27,14 @@ La reconciliación general de efectos externos inciertos sigue pendiente. Ningú
 
 Validación del incremento de recuperación durable sobre `ba88410` más sus cambios, en copia temporal con Node v24.22.1 y sin credenciales reales: typecheck PASS, `test:core` **51/51 PASS**, integraciones v1/v2/v3 PASS. Incluye 22 regresiones nuevas de durabilidad. Se reutilizaron las dependencias locales instaladas; no se repitió `npm ci` ni se modificó el lockfile. La ejecución hospedada de este incremento queda acreditada por [run 40324649673](https://github.com/Migueld1324/agent-runtime/actions/runs/40324649673), intento 1 `success`. Detalles en [verificación](verification.md#recuperación-durable--adr-086).
 
+## Investigación de mantenimiento — 27-10-2026
+
+Base contrastada: `origin/main` en `5aa4eac`. ADR-085/086 conservan su estado aceptado; ADR-087 está integrada documentalmente pero sigue propuesta y sin implementar. [ADR-088](../decisions/088-maintenance-backend.md) añade una propuesta de Maintenance Backend portable con [análisis](../architecture/maintenance-backend-analysis.md) y [plan/pruebas](maintenance-backend-plan.md), pendientes de aprobación y ejecución.
+
+El código actual no tiene autoridad de mantenimiento, barrera de admisión impuesta por el SO, inventario protegido de instalación ni journal administrativo. `withRuntimeLock` solo coordina mutantes v3; v1/v2 y administración de registro/grants quedan fuera. `GrantStore` revoca por descriptor actual, por lo que falta la administración por huella histórica que requiere ADR-087. Un grupo de procesos vacío no prueba por sí solo exclusión de accesos externos ni drenaje de I/O.
+
+No se cambiaron contratos aprobados, código, dependencias ni datos locales en esta investigación. El Incremento 2 del Gateway sigue bloqueado hasta aprobar y demostrar el backend y satisfacer D1–D10; los ensayos adversariales propuestos no se presentan como validación existente. La recuperación de runs y la conciliación de efectos siguen regidas por ADR-085/086.
+
 ## Corte histórico del 24-10-2026
 
 **Fecha de corte:** 24-10-2026. **Versión:** `0.3.1` en `package.json`. **Evidencia:** código y tests del repositorio contrastados con la documentación; resultados de validación en CachyOS reportados por el equipo de desarrollo. No se reejecutaron suites ni inferencias remotas durante esta revisión documental.

@@ -110,6 +110,14 @@ Revalidación local del 27-10-2026 sobre `b8758e9`, en copia temporal aislada co
 
 **Límites:** estas pruebas no acreditan garantía universal de exactly-once, tolerancia a fallo físico del disco, coordinación multi-host, restauración coherente desde backups ni conciliación externa. Una operación incierta queda detenida. El incremento de ADR-086 está integrado y validado dentro de ese alcance; la consolidación completa de Fase 0 continúa.
 
+## Maintenance Backend — propuesta documental ADR-088
+
+La entrega del 27-10-2026 sobre `5aa4eac` añade [ADR-088](../decisions/088-maintenance-backend.md), [investigación](../architecture/maintenance-backend-analysis.md) y [plan de aceptación](maintenance-backend-plan.md). No implementa un backend ni ejecuta mantenimiento. La validación documental comprueba alcance del diff, enlaces internos y consistencia de estados; no acredita aislamiento OS, durabilidad del backend ni migración de grants.
+
+Comprobación local documental: **PASS**, 10 archivos Markdown bajo `docs/`, 183 enlaces relativos (incluidos anchors) resueltos, `git diff --check` sin errores y contenido de ADR-085/086/087 idéntico a la base. No se añadieron fuentes, dependencias ni archivos operacionales.
+
+P01–P23 cubren contrato portable y adversarios; C1–C8 cubren interrupciones; D1–D10 son condiciones acumulativas para habilitar el Incremento 2 de ADR-087. Todas permanecen pendientes. Se requieren ensayos privilegiados en entornos desechables por perfil, incluidos procesos que ignoran locks, handles externos, escape, I/O pendiente, muerte del supervisor y reinicio de host. Los 51 tests y la CI de ADR-086 no sustituyen esa evidencia. No se reejecutaron suites de runtime para este cambio exclusivamente documental.
+
 ## Evidencia histórica disponible de 0.3.1
 
 ```fish
