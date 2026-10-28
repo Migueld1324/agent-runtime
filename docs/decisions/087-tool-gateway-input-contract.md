@@ -4,6 +4,8 @@
 **Base contrastada:** `ab22823` de `origin/main`, con ADR-086 y su documentación de cierre integradas.  
 **Relación:** concreta ADR-021/049–052/068–072 y conserva las fronteras de autorización y recuperación de ADR-085/086.
 
+**Control previo de implementación — 27-10-2026:** en `main` `a0af08d` no se localizó aprobación arquitectónica documentada de esta ADR. Se preparó el [registro del Incremento 1](087-increment-1-approval.md) para ratificación explícita; no se inició implementación. La aprobación posterior de ADR-088 no se extiende automáticamente a ADR-087.
+
 ## Problema y resultado buscado
 
 Hoy `src/v2/tools.ts` decide los campos y tipos aceptados mediante ramas por adaptador. `src/v3/tool-schema.ts` vuelve a describirlos para los proveedores. El esquema de escritura anunciado solo exige dos strings; la ejecución exige además nombre seguro, contenido no vacío y un máximo de 16 KiB. Un cambio puede actualizar una representación y dejar otra desfasada.

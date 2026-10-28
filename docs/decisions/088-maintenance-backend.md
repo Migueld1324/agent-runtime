@@ -1,6 +1,8 @@
 # ADR-088 — Contrato portable del Maintenance Backend
 
-**Estado:** propuesta para revisión arquitectónica; no aprobada ni implementada.
+**Estado:** aceptada arquitectónicamente por confirmación explícita del responsable posterior al merge del PR #8; no implementada. La aprobación no autoriza operaciones sobre datos reales. La futura implementación debe comenzar por M1, protocolo portable sin privilegios OS prematuros; queda fuera del encargo actual del Gateway. Procedencia y separación de alcances en el [registro de revisión](087-increment-1-approval.md).
+
+El cuerpo conserva la redacción de la propuesta revisada; esta actualización registra su aceptación y restricciones, sin cambiar el contrato técnico ni acreditar capacidades implementadas.
 
 **Fecha:** 27-10-2026. **Base inspeccionada:** `origin/main` en `5aa4eac`; ADR-088 no existía en esa base.
 

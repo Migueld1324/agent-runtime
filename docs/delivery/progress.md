@@ -4,6 +4,8 @@ Fecha de actualización: 27-10-2026. Versión del proyecto: PoC 0.3.1.
 
 ## Estado actual
 
+**Control previo del Gateway — 27-10-2026:** `main` en `a0af08d` incorpora PR #7 (ADR-087) y PR #8 (ADR-088). El responsable confirma aprobación arquitectónica de ADR-088, sin operaciones sobre datos reales y con futuro inicio por M1 portable. ADR-087 sigue sin aprobación arquitectónica documentada en las fuentes inspeccionadas. Se preparó el [registro del Incremento 1](../decisions/087-increment-1-approval.md) y se detuvo la implementación conforme a la instrucción recibida. No se añadió Ajv ni se cambió código/tests. La aprobación de ADR-088 no se confunde con el Incremento 1 del Gateway; Maintenance Backend está fuera de este encargo. Los apartados históricos de diseño que siguen son antecedentes, no el estado actualizado de aprobación.
+
 **PoC 0.3.1 cerrada dentro de su alcance.** Los seis casos de cierre fueron evaluados. Evidencia, run IDs, cambios, resultados y límites en [poc-031-closure.md](poc-031-closure.md).
 
 - PoC 0.1: ejecución durable y aprobaciones.

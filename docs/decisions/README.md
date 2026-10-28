@@ -16,9 +16,9 @@ Este registro redacta cada decisión como parte de la **especificación de arqui
 
 - [ADR-086 — Persistencia de invocaciones y exclusión de ejecución](086-durable-invocations-and-recovery.md): **aceptada e implementada**; concreta almacenamiento, exclusión, recuperación y migración conservadora.
 
-- [ADR-087 — Validación extensible de entradas del Tool Gateway](087-tool-gateway-input-contract.md): **propuesta para revisión, no implementada**; perfil de `inputSchema`, compatibilidad de huellas y migración explícita de descriptores/grants.
+- [ADR-087 — Validación extensible de entradas del Tool Gateway](087-tool-gateway-input-contract.md): **propuesta, no implementada**; [registro del Incremento 1 preparado para ratificación](087-increment-1-approval.md). Perfil de `inputSchema`, compatibilidad de huellas y migración explícita de descriptores/grants.
 
-- [ADR-088 — Contrato portable del Maintenance Backend](088-maintenance-backend.md): **propuesta para revisión, no aprobada ni implementada**; exclusión de procesos no cooperativos, autorización administrativa, evidencia durable y recuperación fail-closed. Dependencia del Incremento 2 de ADR-087; incluye [análisis](../architecture/maintenance-backend-analysis.md) y [plan de aceptación](../delivery/maintenance-backend-plan.md).
+- [ADR-088 — Contrato portable del Maintenance Backend](088-maintenance-backend.md): **aceptada arquitectónicamente, no implementada**; sin autorización de mantenimiento sobre datos reales. Futuro inicio por M1 portable, sin privilegios OS prematuros. Dependencia del Incremento 2 de ADR-087; incluye [análisis](../architecture/maintenance-backend-analysis.md) y [plan de aceptación](../delivery/maintenance-backend-plan.md). No está incluida en la implementación del Gateway.
 
 ## Excepciones y precedencia
 
@@ -117,5 +117,5 @@ Este registro redacta cada decisión como parte de la **especificación de arqui
 | [ADR-084](policy-and-runtime.md#adr-084) | Extensibilidad multiagente sin dependencia inicial | Baseline de diseño |
 | [ADR-085](085-runtime-failures-and-recovery.md) | Fallos explícitos y recuperación controlada del runtime | Aceptada; implementación incremental |
 | [ADR-086](086-durable-invocations-and-recovery.md) | Persistencia de invocaciones y exclusión de ejecución | Aceptada e implementada |
-| [ADR-087](087-tool-gateway-input-contract.md) | Validación extensible de entradas del Tool Gateway | Propuesta para revisión |
-| [ADR-088](088-maintenance-backend.md) | Contrato portable del Maintenance Backend | Propuesta para revisión; sin implementación |
+| [ADR-087](087-tool-gateway-input-contract.md) | Validación extensible de entradas del Tool Gateway | Registro del Incremento 1 preparado; ratificación pendiente |
+| [ADR-088](088-maintenance-backend.md) | Contrato portable del Maintenance Backend | Aceptada arquitectónicamente; sin implementación ni mantenimiento autorizado sobre datos reales |
