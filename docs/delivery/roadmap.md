@@ -19,6 +19,8 @@ El plan separa **arquitectura estable** de **cortes incrementales verificables**
 
 **Propuesta pendiente de revisión:** [ADR-087 — Validación extensible del Tool Gateway](../decisions/087-tool-gateway-input-contract.md). Describe validación común con compatibilidad legado y un segundo incremento de migración administrativa, condicionado a un backend de mantenimiento que excluya también procesos antiguos mediante controles del sistema operativo. La revisión incluye no ampliación de entradas y separación entre identidad del descriptor y solicitud; no constituye implementación ni aprobación del contrato.
 
+**Dependencia propuesta del Incremento 2:** [ADR-088 — Maintenance Backend](../decisions/088-maintenance-backend.md), con [alternativas y amenazas](../architecture/maintenance-backend-analysis.md) y [plan M0–M6](maintenance-backend-plan.md). Primero aprobar el contrato; después implementar y acreditar frontera de datos, admisión, autorización, inventario, evidencia y recuperación por perfil de plataforma. Solo los criterios D1–D10 completos permiten habilitar la migración administrativa. No se selecciona Linux como dependencia del núcleo, no se transfieren grants y no se implementa esta propuesta sin aprobación explícita. El Incremento 1 de ADR-087 conserva su revisión independiente.
+
 ## Fase 1 — Common Contracts y registro de capacidades
 
 - Introducir contratos tipados y esquemas versionados de identidad, ámbito, recursos y resultados.

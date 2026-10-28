@@ -36,6 +36,10 @@ El archivo de referencia fue la exportación Markdown de la conversación «Solu
 - Una API key aparecía en un primer ensayo de PoC 0.3; la PoC 0.3.1 corrigió el bloqueo para permitir cuenta ChatGPT sin key comercial.
 - Modelos locales, router inteligente, SQL/Markdown híbridos y aislamiento OS son todavía requisitos, no funciones demostradas.
 
+## Investigación arquitectónica posterior — Maintenance Backend
+
+La propuesta [ADR-088](../decisions/088-maintenance-backend.md), del 27-10-2026, procede de inspección del repositorio en `5aa4eac`, de ADR-085/086 aceptadas y de la dependencia pendiente de ADR-087. El [análisis](../architecture/maintenance-backend-analysis.md) identifica módulos, amenazas, alternativas y fuentes primarias consultadas; el [plan](maintenance-backend-plan.md) separa aceptación futura de evidencia existente. No se atribuye esta propuesta a los acuerdos históricos ni se considera aprobada por estar en el registro. ADR-085/086/087 conservan su contenido; las ampliaciones propuestas se identifican en ADR-088.
+
 ## Datos sensibles y publicación
 
 El paquete contiene solo especificaciones redactadas y resúmenes técnicos. No incrusta historial completo, credenciales OAuth, correo de autenticación, IDs de cuenta ni rutas de claves. Antes de publicar futuras trazas de diagnóstico, sanitizar contenido y revisar archivos ignorados por Git.
