@@ -1,5 +1,7 @@
 # Estado de implementación — corte PoC 0.3.1
 
+**Control previo de implementación — 27-10-2026, base `a0af08d`:** se comprobaron `main`, ADR-085/086/087/088, contratos del Gateway, validadores legados y pruebas. ADR-085/086 conservan aprobación e implementación; ADR-088 fue aprobada por confirmación del responsable posterior al PR #8, con futuro inicio por M1 portable y sin mantenimiento autorizado sobre datos reales. ADR-087 todavía figura como no aprobada en la base y el PR #7 no aporta revisión/comentario de aprobación. Se preparó su [registro del Incremento 1](../decisions/087-increment-1-approval.md) para ratificación y se detuvo el trabajo antes de implementar, conforme al encargo. No hay descriptores v2, Ajv ni pruebas nuevas implementados; no se declara terminado el incremento. Este estado prevalece sobre las referencias históricas de aprobación que siguen.
+
 **Actualización 26-10-2026:** PoC 0.3.1 cerrada dentro de su alcance. Los seis casos de cierre fueron evaluados; consultar [evidencia de cierre](poc-031-closure.md). El corte del 24-10-2026 que sigue se conserva como antecedente histórico; sus pendientes de cierre y observaciones de campos adicionales quedan sustituidos por ese registro. Las capacidades de arquitectura aún no implementadas siguen pendientes.
 
 ## Consolidación posterior al cierre — 26-10-2026
