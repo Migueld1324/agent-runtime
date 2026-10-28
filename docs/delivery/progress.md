@@ -1,10 +1,12 @@
 # Registro de progreso
 
-Fecha de actualización: 27-10-2026. Versión del proyecto: PoC 0.3.1.
+Fecha de actualización: 28-10-2026. Versión del proyecto: PoC 0.3.1.
 
 ## Estado actual
 
-**Control previo del Gateway — 27-10-2026:** `main` en `a0af08d` incorpora PR #7 (ADR-087) y PR #8 (ADR-088). El responsable confirma aprobación arquitectónica de ADR-088, sin operaciones sobre datos reales y con futuro inicio por M1 portable. ADR-087 sigue sin aprobación arquitectónica documentada en las fuentes inspeccionadas. Se preparó el [registro del Incremento 1](../decisions/087-increment-1-approval.md) y se detuvo la implementación conforme a la instrucción recibida. No se añadió Ajv ni se cambió código/tests. La aprobación de ADR-088 no se confunde con el Incremento 1 del Gateway; Maintenance Backend está fuera de este encargo. Los apartados históricos de diseño que siguen son antecedentes, no el estado actualizado de aprobación.
+**Aprobación registrada — 28-10-2026:** ADR-087 Incremento 1 y ADR-088 aprobadas arquitectónicamente por confirmación explícita del responsable comunicada fuera del repositorio, con fecha de aprobación confirmada del 28-10-2026. El [registro de aprobación](../decisions/087-increment-1-approval.md) conserva la procedencia y el alcance. No se requiere nueva ratificación. El PR #9 es exclusivamente documental; después de integrarlo, comenzar la implementación del Incremento 1 en un PR independiente con los criterios ya establecidos. No se añadió Ajv ni se cambió código/tests. El Incremento 2 y operaciones reales de mantenimiento no están autorizados. La implementación de Maintenance Backend queda fuera de este trabajo; su futuro inicio será M1 portable, sin privilegios OS prematuros.
+
+**Antecedente histórico — inspección del 27-10-2026:** `main` en `a0af08d` incorporaba PR #7/#8 y todavía mostraba ADR-087 como propuesta no aprobada. No se localizaron revisiones ni comentarios de aprobación en GitHub y se detuvo la implementación para preparar el registro. Esa observación se conserva como evidencia histórica de las fuentes disponibles; la confirmación externa del 28-10-2026 resuelve el estado de aprobación y deja sin efecto la petición de nueva ratificación.
 
 **PoC 0.3.1 cerrada dentro de su alcance.** Los seis casos de cierre fueron evaluados. Evidencia, run IDs, cambios, resultados y límites en [poc-031-closure.md](poc-031-closure.md).
 
@@ -41,11 +43,13 @@ Integración comprobada el 27-10-2026 mediante la API de GitHub: [PR #4](https:/
 
 ## Siguiente trabajo
 
-Continuar la Fase 0 de [roadmap.md](roadmap.md): revisar [ADR-087](../decisions/087-tool-gateway-input-contract.md), propuesta de validación extensible del Tool Gateway preparada sobre `ab22823`. Incluye alternativas, perfil inicial de `inputSchema`, conservación de huellas legado, migración explícita y pruebas de aceptación. **No está aprobada ni implementada.** Tras revisar el contrato, el primer incremento propuesto es validación común y compatibilidad; la migración administrativa se entrega por separado. La concurrencia entre runs, conciliación de efectos externos, MemoryService híbrido, Context Manager estructurado y routing por capacidades permanecen pendientes.
+Después de integrar el PR #9, implementar [ADR-087 Incremento 1](../decisions/087-tool-gateway-input-contract.md) en un PR independiente: validación común con Ajv/perfil restringido, descriptores v2 para nuevos registros, compatibilidad íntegra v1, huellas deterministas, identidad de solicitud separada y preservación de límites operativos. La aprobación arquitectónica ya está registrada; no se solicitará nuevamente. Ejecutar y persistir typecheck, regresiones, nuevas integraciones y casos adversariales antes de declarar el incremento terminado. La concurrencia entre runs, conciliación de efectos externos, MemoryService híbrido, Context Manager estructurado y routing por capacidades permanecen pendientes.
 
-La revisión precisa tres garantías: no ampliación de entradas por el schema v2, identidad del descriptor separada de la solicitud y exclusión de procesos antiguos durante la migración. Propone limitar transformación v2 a 1.024 caracteres para respetar siempre 2.048 unidades UTF-16, conservando los límites v1. La fase 2 requiere un backend de mantenimiento con control de acceso y admisión de procesos impuesto por el sistema operativo; el checkout actual no acredita esa exclusión y no podrá aplicar migraciones. Estas precisiones y sus pruebas siguen sujetas a revisión.
+El alcance aprobado conserva la no ampliación de entradas y la separación entre huella del descriptor e identidad de solicitud. Transformación v2 se limita a 1.024 caracteres del schema para respetar 2.048 unidades UTF-16, conservando los límites v1. El Incremento 2 permanece sin autorizar y requiere además exclusión verificable de procesos antiguos, backend de mantenimiento y sus criterios de aceptación; el checkout actual no acredita esa exclusión y no puede aplicar migraciones.
 
 ## Propuesta de Maintenance Backend — 27-10-2026
+
+**Antecedente histórico:** se conserva el estado observado al redactar la propuesta. La aprobación vigente de ADR-088 y ADR-087 Incremento 1 es la registrada arriba el 28-10-2026; no autoriza el Incremento 2 ni mantenimiento real.
 
 Investigación documental sobre `origin/main` en `5aa4eac`, que ya contiene ADR-087 como propuesta. Se añade [ADR-088](../decisions/088-maintenance-backend.md), **no aprobada ni implementada**, sin modificar el contenido de ADR-085/086/087. Define contrato portable, autorización administrativa, exclusión mantenida ante procesos antiguos/no cooperativos, journal/ancla de evidencia y recuperación con admisión cerrada.
 

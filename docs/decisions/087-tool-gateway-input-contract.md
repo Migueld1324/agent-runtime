@@ -1,10 +1,12 @@
 # ADR-087 — Validación extensible de entradas del Tool Gateway
 
-**Estado:** propuesta para revisión; no aprobada ni implementada.  
+**Estado:** Incremento 1 aprobado arquitectónicamente por confirmación explícita del responsable del proyecto del 28-10-2026, comunicada fuera del repositorio; no implementado. El Incremento 2 no está autorizado. Procedencia y alcance en el [registro de aprobación](087-increment-1-approval.md).
 **Base contrastada:** `ab22823` de `origin/main`, con ADR-086 y su documentación de cierre integradas.  
 **Relación:** concreta ADR-021/049–052/068–072 y conserva las fronteras de autorización y recuperación de ADR-085/086.
 
-**Control previo de implementación — 27-10-2026:** en `main` `a0af08d` no se localizó aprobación arquitectónica documentada de esta ADR. Se preparó el [registro del Incremento 1](087-increment-1-approval.md) para ratificación explícita; no se inició implementación. La aprobación posterior de ADR-088 no se extiende automáticamente a ADR-087.
+**Antecedente de inspección — 27-10-2026:** en `main` `a0af08d` no se localizó aprobación arquitectónica documentada de esta ADR. Se preparó el registro y no se inició implementación. La confirmación externa del 28-10-2026 resuelve ese vacío documental: el Incremento 1 no requiere nueva ratificación y comenzará en un PR independiente después de integrar el PR #9.
+
+El cuerpo conserva la redacción técnica de la propuesta revisada y sus criterios de aceptación. El estado vigente anterior aprueba únicamente el Incremento 1; las referencias a migración y mantenimiento no autorizan el Incremento 2 ni operaciones sobre datos reales.
 
 ## Problema y resultado buscado
 

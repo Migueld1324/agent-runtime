@@ -1,6 +1,6 @@
 # Maintenance Backend — plan incremental y criterios de aceptación
 
-**Estado:** plan propuesto, no aprobado ni ejecutado. **Fecha:** 27-10-2026.
+**Estado del plan original:** propuesto al corte del 27-10-2026, sin aprobación registrada ni ejecución. **Actualización 28-10-2026:** ADR-088 y ADR-087 Incremento 1 aprobadas por confirmación explícita externa del responsable; [procedencia y alcance](../decisions/087-increment-1-approval.md). La futura implementación del backend comienza por M1 portable sin privilegios OS prematuros, fuera del trabajo actual del Gateway. Este plan conserva sus etapas y criterios de aceptación; no acredita ejecución ni autoriza el Incremento 2 o mantenimiento real.
 
 **Base:** `5aa4eac`. [ADR-088](../decisions/088-maintenance-backend.md) define el contrato; el [análisis](../architecture/maintenance-backend-analysis.md) identifica evidencia, amenazas T1–T15 y alternativas. Las garantías G1–G8 son requisitos por demostrar. Este documento no autoriza implementación ni operaciones de mantenimiento.
 

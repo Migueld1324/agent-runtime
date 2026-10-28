@@ -1,6 +1,6 @@
 # Maintenance Backend — investigación, amenazas y alternativas
 
-**Estado:** análisis de soporte a [ADR-088](../decisions/088-maintenance-backend.md), propuesta no aprobada ni implementada.
+**Estado del análisis original:** soporte a la propuesta de [ADR-088](../decisions/088-maintenance-backend.md) al corte del 27-10-2026, entonces sin aprobación registrada ni implementación. **Actualización 28-10-2026:** ADR-088 y ADR-087 Incremento 1 aprobadas por confirmación explícita externa del responsable; [procedencia y alcance](../decisions/087-increment-1-approval.md). El análisis conserva su evidencia histórica y límites técnicos; no acredita implementación ni autoriza el Incremento 2 o mantenimiento real.
 
 **Corte:** 27-10-2026, código y documentación de `5aa4eac` en `origin/main`. Revisión estática y consulta de documentación primaria; no se ejecutaron ensayos de aislamiento ni migraciones. Las recomendaciones son inferencias de diseño, no garantías acreditadas por las fuentes o por la presencia de una API.
 

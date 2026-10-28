@@ -1,10 +1,20 @@
 # ADR-087 — registro de aprobación del Incremento 1
 
-**Estado:** registro preparado para ratificación; aprobación arquitectónica del Incremento 1 no localizada en las fuentes inspeccionadas. **Implementación:** no iniciada.
+**Estado actual:** ADR-087 Incremento 1 aprobado arquitectónicamente. ADR-088 también aprobada. **Implementación:** no iniciada; el PR #9 es exclusivamente documental. No se requiere una nueva ratificación.
 
-**Fecha:** 27-10-2026, America/Mexico_City. **Base:** `origin/main`, `a0af08d6505b2593197525661d7aac5a21209c72`. Este registro complementa [ADR-087](087-tool-gateway-input-contract.md); no cambia su contrato técnico ni aprueba el Incremento 2.
+**Fecha de aprobación confirmada:** 28-10-2026. **Inspección inicial:** 27-10-2026, America/Mexico_City. **Base inspeccionada:** `origin/main`, `a0af08d6505b2593197525661d7aac5a21209c72`. Este registro complementa [ADR-087](087-tool-gateway-input-contract.md); no cambia su contrato técnico ni aprueba el Incremento 2.
 
-## Evidencia y decisión de esta revisión
+## Procedencia y efecto de la aprobación vigente
+
+El responsable del proyecto confirmó explícitamente, mediante comunicación **fuera del repositorio** recibida en esta sesión de trabajo, que la aprobación arquitectónica de **ADR-087 Incremento 1 y ADR-088 fue confirmada el 28 de octubre de 2026**. Esta actualización registra esa confirmación externa; no la atribuye a una revisión de GitHub inexistente ni la deduce del merge de los PR #7/#8.
+
+La instrucción del responsable establece que no se necesita nueva ratificación y que, **después de integrar el PR #9**, se debe comenzar la implementación de ADR-087 Incremento 1 en un PR independiente, manteniendo el alcance y los criterios de aceptación existentes. Esa implementación ya está autorizada con dicha secuencia; la aprobación arquitectónica no vuelve a ser un requisito pendiente. El PR #9 no contiene código funcional.
+
+La aprobación no autoriza el Incremento 2 de ADR-087 ni operaciones reales de mantenimiento. ADR-088 conserva su inicio futuro por M1, protocolo portable sin privilegios OS prematuros; implementar Maintenance Backend sigue fuera del incremento del Gateway. Aceptación arquitectónica, implementación validada y autorización de una operación real son estados distintos.
+
+## Evidencia histórica de la inspección inicial — 27-10-2026
+
+Los hechos siguientes describen únicamente lo que estaba registrado en las fuentes inspeccionadas entonces. No invalidan la confirmación externa del 28-10-2026 ni representan el estado actual de aprobación.
 
 - En la base inspeccionada, ADR-087 y el índice de decisiones mantienen el estado de propuesta no aprobada. ADR-085/086 sí están aceptadas; no se modifican.
 - El [PR #7](https://github.com/Migueld1324/agent-runtime/pull/7) de ADR-087 está integrado desde `2026-10-28T04:37:22Z`. Al consultar la API de GitHub no tenía descripción, revisiones ni comentarios que documentaran aprobación arquitectónica. La integración del texto no sustituye esa aprobación.
@@ -12,13 +22,11 @@
 - Esa instrucción aprueba ADR-088 con dos límites: no autoriza mantenimiento sobre datos reales y cualquier implementación futura del backend debe comenzar por M1, protocolo portable sin privilegios OS prematuros. El mismo encargo excluye implementar Maintenance Backend del trabajo del Gateway. M1 de ADR-088 e Incremento 1 de ADR-087 son entregas distintas; M1 no es requisito del primer incremento del Gateway.
 - La solicitud de implementación del Gateway está expresamente condicionada a aprobación documentada e indica preparar este registro y detenerse antes de implementar si falta. No se extrapola la aprobación de ADR-088 a ADR-087 ni se usa este documento para autoaprobar el cambio.
 
-**Decisión ejecutada:** preparar el registro y detener el trabajo funcional. **Decisión pendiente del responsable:** ratificar explícitamente el alcance del Incremento 1 descrito abajo. Al recibirla, registrar su fecha, procedencia y alcance, actualizar el estado correspondiente de ADR-087 y continuar en un PR de implementación independiente. No exigir repetir la aprobación de ADR-088 ni aprobar mantenimiento sobre datos reales.
+**Actuación histórica:** se preparó el registro, se detuvo el trabajo funcional y se solicitó ratificación al no localizar aprobación en el repositorio/API. Esa solicitud queda superada por la confirmación explícita del responsable registrada arriba. La falta de una revisión o comentario en GitHub fue una observación sobre las fuentes disponibles, no prueba de que la aprobación arquitectónica no existiera fuera del repositorio.
 
-## Alcance exacto preparado para ratificación
+## Alcance aprobado del Incremento 1
 
-Se propone registrar la siguiente aprobación, todavía **no emitida**:
-
-> Aprobar el Incremento 1 de ADR-087 conforme al contrato técnico de `a0af08d`: validación común y compatibilidad de entradas del Tool Gateway, con las restricciones y pruebas siguientes. Autorizar su implementación sin incluir el Incremento 2 ni Maintenance Backend.
+La confirmación mantiene el contrato técnico de `a0af08d`: validación común y compatibilidad de entradas del Tool Gateway, con las restricciones y pruebas siguientes. Se autoriza su implementación después de integrar el PR #9, sin incluir el Incremento 2 ni Maintenance Backend. La lista conserva el alcance técnico y los criterios de aceptación preparados en la inspección inicial.
 
 1. Descriptores v2 para nuevos registros del adaptador confiable de transformación, con `inputSchema` y perfil plano `tool-input/1`, JSON Schema draft-07 y límites de ADR-087. Built-ins de filesystem permanecen en formato legado. No sustituir registros existentes ni añadir ejecutores/capacidades ajenos al alcance.
 2. Ajv con filtro previo del perfil y opciones explícitas `strict:true`, `allErrors:false`, `coerceTypes:false`, `useDefaults:false`, `removeAdditional:false`, `ownProperties:true`; sin referencias/carga remotas, coerciones, defaults ni eliminación de argumentos. Versión concreta fijada y verificada en el lockfile al implementar.
@@ -51,3 +59,7 @@ Ajv no figura en las dependencias directas actuales. No se instaló, no se conge
 Comprobación local del 27-10-2026: enlaces relativos y anchors resueltos; diff restringido a Markdown en `docs/`; `git diff --check` satisfactorio; ADR-085/086 sin cambios y ninguna modificación funcional. ADR-087 solo recibe una nota de control previo; ADR-088 solo actualiza su estado/procedencia, conservando los contratos técnicos.
 
 Typecheck, suites e integraciones no ejecutados en este corte documental. Deben ejecutarse y registrarse para el futuro PR funcional; no se declara PASS por inspección de tests ni por resultados de commits anteriores.
+
+Actualización documental del 28-10-2026: se registra procedencia, fecha y alcance de la aprobación externa y se distingue el estado actual de la inspección histórica. Se mantienen los ocho puntos técnicos anteriores, las exclusiones y los contratos de ADR-085/086/087/088. La aprobación no constituye evidencia de implementación ni de pruebas funcionales.
+
+Verificación local de esta actualización: **PASS**, 10 archivos Markdown modificados y 179 enlaces relativos/anchors resueltos; `git diff --check` sin errores. Comparación con `3a3f330`: los ocho puntos de alcance, las exclusiones, los cuerpos técnicos de ADR-087/088 y las etapas/criterios del plan de mantenimiento permanecen idénticos; ADR-085/086 no cambian. Sin ejecución de pruebas funcionales ni cambios de código, dependencias o datos.

@@ -1,12 +1,12 @@
 # ADR-088 — Contrato portable del Maintenance Backend
 
-**Estado:** aceptada arquitectónicamente por confirmación explícita del responsable posterior al merge del PR #8; no implementada. La aprobación no autoriza operaciones sobre datos reales. La futura implementación debe comenzar por M1, protocolo portable sin privilegios OS prematuros; queda fuera del encargo actual del Gateway. Procedencia y separación de alcances en el [registro de revisión](087-increment-1-approval.md).
+**Estado:** aceptada arquitectónicamente por confirmación explícita del responsable del proyecto del 28-10-2026, comunicada fuera del repositorio; no implementada. No requiere nueva ratificación. La aprobación no autoriza operaciones sobre datos reales ni el Incremento 2 de ADR-087. La futura implementación debe comenzar por M1, protocolo portable sin privilegios OS prematuros; queda fuera del encargo actual del Gateway. Procedencia y separación de alcances en el [registro de aprobación](087-increment-1-approval.md).
 
 El cuerpo conserva la redacción de la propuesta revisada; esta actualización registra su aceptación y restricciones, sin cambiar el contrato técnico ni acreditar capacidades implementadas.
 
 **Fecha:** 27-10-2026. **Base inspeccionada:** `origin/main` en `5aa4eac`; ADR-088 no existía en esa base.
 
-**Relación:** desarrolla la dependencia de mantenimiento del Incremento 2 de [ADR-087](087-tool-gateway-input-contract.md), también propuesta. Conserva ADR-001/014/019/021/051/055/058/061/063/066/067/072 y los contratos aceptados de [ADR-085](085-runtime-failures-and-recovery.md) y [ADR-086](086-durable-invocations-and-recovery.md).
+**Relación:** desarrolla la dependencia de mantenimiento del Incremento 2 de [ADR-087](087-tool-gateway-input-contract.md), que sigue sin autorizar; su Incremento 1 está aprobado de forma independiente. Conserva ADR-001/014/019/021/051/055/058/061/063/066/067/072 y los contratos aceptados de [ADR-085](085-runtime-failures-and-recovery.md) y [ADR-086](086-durable-invocations-and-recovery.md).
 
 **Documentos complementarios:** [investigación, amenazas y alternativas](../architecture/maintenance-backend-analysis.md), [plan incremental y pruebas](../delivery/maintenance-backend-plan.md).
 
