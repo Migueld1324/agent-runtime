@@ -1,6 +1,6 @@
 # ADR-087 — registro de aprobación del Incremento 1
 
-**Estado actual:** ADR-087 Incremento 1 aprobado arquitectónicamente. ADR-088 también aprobada. **Implementación:** no iniciada; el PR #9 es exclusivamente documental. No se requiere una nueva ratificación.
+**Estado actual:** ADR-087 Incremento 1 aprobado arquitectónicamente y **autorizado para implementación** por confirmación explícita del responsable. ADR-088 también aprobada. **Ejecución:** debe comenzar después de integrar el PR #9, en un PR funcional independiente. El PR #9 es exclusivamente documental. No se requiere nueva ratificación.
 
 **Fecha de aprobación confirmada:** 28-10-2026. **Inspección inicial:** 27-10-2026, America/Mexico_City. **Base inspeccionada:** `origin/main`, `a0af08d6505b2593197525661d7aac5a21209c72`. Este registro complementa [ADR-087](087-tool-gateway-input-contract.md); no cambia su contrato técnico ni aprueba el Incremento 2.
 
@@ -8,9 +8,9 @@
 
 El responsable del proyecto confirmó explícitamente, mediante comunicación **fuera del repositorio** recibida en esta sesión de trabajo, que la aprobación arquitectónica de **ADR-087 Incremento 1 y ADR-088 fue confirmada el 28 de octubre de 2026**. Esta actualización registra esa confirmación externa; no la atribuye a una revisión de GitHub inexistente ni la deduce del merge de los PR #7/#8.
 
-La instrucción del responsable establece que no se necesita nueva ratificación y que, **después de integrar el PR #9**, se debe comenzar la implementación de ADR-087 Incremento 1 en un PR independiente, manteniendo el alcance y los criterios de aceptación existentes. Esa implementación ya está autorizada con dicha secuencia; la aprobación arquitectónica no vuelve a ser un requisito pendiente. El PR #9 no contiene código funcional.
+La instrucción del responsable constituye aprobación arquitectónica **y autorización para implementar** ADR-087 Incremento 1, sujetas a la secuencia explícita: **después de integrar el PR #9**, comenzar el código en un PR independiente y mantener el alcance y los criterios de aceptación existentes. No falta aprobación adicional. Hasta que ocurra esa integración, el PR #9 no contiene ni debe recibir código funcional.
 
-La aprobación no autoriza el Incremento 2 de ADR-087 ni operaciones reales de mantenimiento. ADR-088 conserva su inicio futuro por M1, protocolo portable sin privilegios OS prematuros; implementar Maintenance Backend sigue fuera del incremento del Gateway. Aceptación arquitectónica, implementación validada y autorización de una operación real son estados distintos.
+La autorización de implementación cubre solo ADR-087 Incremento 1. No autoriza el Incremento 2 ni operaciones reales de mantenimiento. ADR-088 conserva su inicio futuro por M1, protocolo portable sin privilegios OS prematuros; implementar Maintenance Backend sigue fuera del incremento del Gateway. La autorización para escribir código no equivale a declarar tests PASS ni a habilitar una operación sobre datos reales.
 
 ## Evidencia histórica de la inspección inicial — 27-10-2026
 

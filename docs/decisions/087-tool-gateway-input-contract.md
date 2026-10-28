@@ -1,6 +1,6 @@
 # ADR-087 — Validación extensible de entradas del Tool Gateway
 
-**Estado:** Incremento 1 aprobado arquitectónicamente por confirmación explícita del responsable del proyecto del 28-10-2026, comunicada fuera del repositorio; no implementado. El Incremento 2 no está autorizado. Procedencia y alcance en el [registro de aprobación](087-increment-1-approval.md).
+**Estado:** Incremento 1 aprobado arquitectónicamente y autorizado para implementación por confirmación explícita del responsable del proyecto del 28-10-2026, comunicada fuera del repositorio; implementación autorizada después de integrar el PR #9 en un PR independiente. El Incremento 2 no está autorizado. Procedencia y alcance en el [registro de aprobación](087-increment-1-approval.md).
 **Base contrastada:** `ab22823` de `origin/main`, con ADR-086 y su documentación de cierre integradas.  
 **Relación:** concreta ADR-021/049–052/068–072 y conserva las fronteras de autorización y recuperación de ADR-085/086.
 
