@@ -1,5 +1,9 @@
 # Registro de progreso
 
+**Actualización ADR-087 Incremento 1 — 29-10-2026:** implementación en la rama `feat/adr087-input-contract`, sobre `main` `7d87338` (PR #9 integrado, confirmado por API). Descriptores v2 para nuevos registros, Ajv 8.20.0 fijado, perfil `tool-input/1`, codec legado separado, canonicalización v2 y validación común del Gateway/proveedores. V1 conserva fingerprints, hashes de solicitud y límites; los datos históricos no se migran. V2 admite hasta 1.024 caracteres Unicode y mantiene el control de 2.048 unidades UTF-16. Evidencia y límites en [validación del incremento](adr087-increment-1-validation.md). Pendiente crear el PR y completar revisión técnica/arquitectónica antes del merge; publicación por SSH por instrucción del responsable. Incremento 2 y Maintenance Backend siguen fuera de alcance.
+
+Los estados anteriores siguientes son antecedentes históricos.
+
 Fecha de actualización: 28-10-2026. Versión del proyecto: PoC 0.3.1.
 
 ## Estado actual

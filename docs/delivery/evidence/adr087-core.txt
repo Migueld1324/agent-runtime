@@ -1,0 +1,68 @@
+
+> agent-runtime-poc@0.3.1 test:core
+> node --disable-warning=ExperimentalWarning --experimental-strip-types --test test/*.test.ts
+
+✔ policy rejects paths and dangerous basenames (1.773985ms)
+✔ approval binds exact run, file and contents (0.795062ms)
+✔ writeOnce creates file idempotently and refuses clobber (19.81953ms)
+✔ writeOnce refuses symlink targets (3.966845ms)
+✔ accepts trusted manifest; rejects arbitrary execution and reserved IDs (1.899668ms)
+✔ descriptor fingerprint changes when declared operations change (0.604489ms)
+✔ approval is bound to exact run, descriptor and input (0.325653ms)
+✔ new capability initially requires approval; grants persist in SQLite; revoke works (48.324384ms)
+✔ invalid args cannot be approved or run (0.581988ms)
+✔ frozen legacy hashes, unchanged grants, distinct request identity (48.793152ms)
+✔ Unicode differential and schema implication against frozen validator (80.479927ms)
+✔ profile rejects unsupported schemas and invalid arguments without mutation (1.716749ms)
+✔ filesystem keeps UTF-8 boundaries and safe filenames (14.474563ms)
+✔ full ChatGPT adapter failures persist without effects or commercial fallback (991.553423ms)
+✔ five proposals persist across graph recreation; no sixth inference or effect (256.098787ms)
+✔ invalid proposals never reach approval or execution; checkpoint remains inspectable (187.807509ms)
+✔ router is offline by default even with credentials (1.305858ms)
+✔ explicit cloud model requires key and name; no silent fallback (0.508822ms)
+✔ auto only uses cloud when explicitly opted in (0.165316ms)
+✔ mock proposes transform, then write, then final; does not execute (3.867221ms)
+✔ mock requires exact filename for a write operation (0.289176ms)
+✔ ChatGPT subscription route works without commercial API key (0.314542ms)
+✔ process death at prepared preserves effects and prevents concurrent mutation (1894.424506ms)
+✔ process death at claimed preserves effects and prevents concurrent mutation (1727.10217ms)
+✔ process death at effect_returned preserves effects and prevents concurrent mutation (1639.806148ms)
+✔ process death at result_confirmed preserves effects and prevents concurrent mutation (1618.324616ms)
+✔ model failure after confirmed tool recovers only inference and preserves observations (49.961044ms)
+✔ model and verification share durable recovery budget and request IDs cannot be reused (36.710613ms)
+✔ lost or replaced invocation store blocks continuation without recreating it (31.489162ms)
+✔ SQLite write failure at prepared never permits an unconfirmed repeat (41.537082ms)
+✔ SQLite write failure at effect_returned never permits an unconfirmed repeat (47.409488ms)
+✔ a trusted before-effect failure is terminal; unknown Executor failure is uncertain (44.23547ms)
+✔ a killed model attempt resumes only on an explicit command (833.507326ms)
+✔ checkpoint write failure after confirmed result cannot repeat the Executor (28.55521ms)
+✔ failed recovery checkpoint preserves the consumed attempt and blocks redispatch of its request (23.117958ms)
+✔ interrupted continuation with two consumed recoveries becomes terminal without inference (13.042448ms)
+✔ invocation claim and recovery acceptance are durable and cannot be consumed twice (2.219691ms)
+✔ missing checkpoints cannot reset a run already registered in the invocation store (11.579187ms)
+✔ grant failed preserves a confirmed result without replay (22.379351ms)
+✔ grant pending preserves a confirmed result without replay (36.297039ms)
+✔ explicit migration preserves history, criterion and recovery budget and requires fresh consent (31.210939ms)
+✔ legacy authorization without an execution marker cannot be presumed safe (8.059397ms)
+✔ v0 migration requires explicit criteria and unknown versions remain blocked (22.65441ms)
+✔ migration of a suspended v1 verifier preserves its criterion and consumed recovery budget (16.557117ms)
+✔ isolated v2 gateway integration (3974.947952ms)
+✔ criteria are explicit, bounded and bound to run, scope and objective (3.458534ms)
+✔ verifier checks actual bounded bytes, policy and symlinks without writing (68.374601ms)
+✔ intake refuses missing criteria before inference; final text cannot fake completion (63.737655ms)
+✔ wrong content fails, unsafe evidence pauses and policy denial is explicit (55.262702ms)
+✔ verification evidence persists after approved write and graph recreation (52.328562ms)
+✔ changing fixed criteria during approval is rejected before writing (26.352629ms)
+✔ verification recovery succeeds without model/tool replay (56.743737ms)
+✔ verification recovery exhausts budget without model/tool replay (69.752056ms)
+✔ ChatGPT can propose a tool but cannot directly execute (2.472739ms)
+✔ SIWC streaming waits for completed event (7.54416ms)
+✔ SIWC rejects interrupted streams and provider failure (0.948487ms)
+ℹ tests 56
+ℹ suites 0
+ℹ pass 56
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9058.803292

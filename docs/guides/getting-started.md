@@ -113,3 +113,15 @@ npm run agent:v2 -- grants revoke text.transform
 Seguir [verificación](../delivery/verification.md) para las suites offline y CI. Las integraciones deben ejecutarse secuencialmente en un checkout desechable: crean registros y revocan grants. Las pruebas de inferencia real son separadas; ver [uso de ChatGPT](chatgpt.md).
 
 El presupuesto actual cuenta cinco propuestas válidas de herramienta, antes de su autorización. Agotarlo detiene la ejecución sin una sexta inferencia, incluso si esta hubiera podido devolver una respuesta final. El Gateway valida argumentos y reevalúa permisos antes del efecto. El alcance de filesystem se limita a Markdown de demostración; no usar el prototipo sobre carpetas personales o repositorios reales. Estas comprobaciones no ofrecen aislamiento OS ni conciliación general de efectos externos.
+
+## Nuevos contratos de entrada v2
+
+Se puede registrar `examples/text-uppercase-v2.tool.json` con el comando existente:
+
+```bash
+npm run agent:v2 -- tools register examples/text-uppercase-v2.tool.json
+```
+
+El ID nuevo `text.uppercase` acepta solo `uppercase` y entradas de 1 a 1.024 caracteres Unicode. Las transformaciones v1 mantienen su límite de 2.048 unidades UTF-16; v2 reduce deliberadamente las entradas ASCII de 1.025–2.048 caracteres. No sustituir manifiestos existentes: el registro rechaza sobrescrituras y no transfiere grants. Filesystem permanece legado.
+
+`descriptorVersion: 2` exige el perfil plano `tool-input/1` de ADR-087, sin referencias, defaults, coerción, patrones ni tipos distintos de string. Los errores detienen la propuesta antes de aprobación o ejecución; el esquema no concede permisos. Consultar [la evidencia y límites](../delivery/adr087-increment-1-validation.md).
