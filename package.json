@@ -21,15 +21,15 @@
     "auth:v3": "tsx src/v3/auth-cli.ts"
   },
   "dependencies": {
-    "@langchain/core": "^1.0.0",
-    "@langchain/langgraph": "^1.5.2",
-    "@langchain/langgraph-checkpoint-sqlite": "^1.1.0",
     "@ai-sdk/anthropic": "^4.0.0",
     "@ai-sdk/google": "^4.0.0",
     "@ai-sdk/openai": "^4.0.0",
+    "@langchain/core": "^1.0.0",
+    "@langchain/langgraph": "^1.5.2",
+    "@langchain/langgraph-checkpoint-sqlite": "^1.1.0",
     "ai": "^7.0.0",
-    "jose": "^6.0.0",
-    "ajv": "8.17.1"
+    "ajv": "8.20.0",
+    "jose": "^6.0.0"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
