@@ -6,7 +6,7 @@ import { google } from '@ai-sdk/google';
 import type { ToolDescriptor } from '../v2/registry.ts';
 import { mockDecision, type Observation, type ModelAction } from './mock.ts';
 import type { ModelName } from './router.ts';
-import { schemaFor } from './tool-schema.ts';
+import { schemaFor, constraintsFor } from './tool-schema.ts';
 import { decideWithChatGPT } from './chatgpt-inference.ts';
 
 const toolName = (tool: ToolDescriptor): string => tool.id.replace(/\./g, '_');
@@ -25,7 +25,7 @@ export async function decideAction(input: {
   if (aliasMap.size !== input.tools.length) throw new Error('Tool alias collision');
   // NOTE: No execute handlers. LLM proposes; our LangGraph/Policy Gateway executes later.
   const llmTools = Object.fromEntries(input.tools.map((d) => [toolName(d), {
-    description: `${d.id}: ${d.description}. Effects: ${d.effects.join(',')}. Only workspace .md files for filesystem tools.`,
+    description: `${d.id}: ${d.description}. Effects: ${d.effects.join(',')}. ${constraintsFor(d)}`,
     inputSchema: jsonSchema(schemaFor(d)),
   }]));
   const observationText = input.history.map((h, i) =>
