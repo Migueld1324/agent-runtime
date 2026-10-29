@@ -4,7 +4,7 @@ import { accessToken, savedChatGPT } from './chatgpt-auth.ts';
 import type { ToolDescriptor } from '../v2/registry.ts';
 import type { Observation, ModelAction } from './mock.ts';
 import { parseModelProposal, collectSIWCStream } from './siwc-protocol.ts';
-import { schemaFor } from './tool-schema.ts';
+import { schemaFor, constraintsFor } from './tool-schema.ts';
 
 const ENDPOINT = 'https://api.openai.com/v1/responses';
 const INSTRUCTIONS = `You are a constrained tool planner, not a tool executor.
@@ -21,7 +21,7 @@ export async function decideWithChatGPT(input:{objective:string;history:Observat
   try {credentials=await savedChatGPT();}catch {throw new ModelFailure('INVALID_ARGUMENT',false);}
   const model=process.env.CHATGPT_MODEL?.trim() || credentials?.selected_model;
   if (!model) throw new ModelFailure('UNAVAILABLE',true,'Select a model first: npm run auth:v3 -- models ; npm run auth:v3 -- use MODEL_SLUG');
-  const toolList=input.tools.map(t=>({id:t.id,description:t.description,effects:t.effects,operations:t.operations ?? [],
+  const toolList=input.tools.map(t=>({id:t.id,description:`${t.description}. ${constraintsFor(t)}`,effects:t.effects,operations:t.descriptorVersion===2 ? t.inputSchema!.properties.operation.enum : t.operations ?? [],
     adapter:t.adapter,argsSchema:schemaFor(t)}));
   const observations=input.history.map(h=>({toolId:h.toolId,args:h.args,result:h.result}));
   // Deliberately avoids hosted tool execution: our own Policy Gateway handles every proposed call.

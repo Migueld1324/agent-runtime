@@ -1,0 +1,1 @@
+{"descriptorVersion":2,"id":"text.uppercase","version":"1.0.0","description":"Convert text to uppercase","adapter":"builtin.text.transform","effects":["read"],"inputSchema":{"type":"object","additionalProperties":false,"properties":{"input":{"type":"string","minLength":1,"maxLength":1024},"operation":{"type":"string","enum":["uppercase"]}},"required":["input","operation"]}}
