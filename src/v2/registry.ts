@@ -96,7 +96,7 @@ export function inputSchemaFor(tool:ToolDescriptor):InputSchema {
   }
   if(tool.adapter==='builtin.text.transform') {
     validateManifest(tool);
-    return {type:'object',additionalProperties:false,properties:{input:{type:'string'},operation:{type:'string',enum:tool.operations}},required:['input','operation']};
+    return {type:'object',additionalProperties:false,properties:{input:{type:'string',minLength:1,maxLength:2048},operation:{type:'string',enum:tool.operations}},required:['input','operation']};
   }
   const builtin=builtinTools.find(t=>t.id===tool.id);
   if(!builtin || JSON.stringify(tool)!==JSON.stringify(builtin)) throw new Error('Invalid builtin descriptor');
