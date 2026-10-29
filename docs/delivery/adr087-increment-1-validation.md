@@ -35,6 +35,27 @@ La suite existente conserva las pruebas de muerte real de procesos, incertidumbr
 
 Sin inferencias comerciales o ChatGPT real; igualdad estructural y controles locales probados, no conformidad remota de cada proveedor. Sin CI hospedada acreditada todavía. Sin ensayo de pérdida de energía ni garantías de aislamiento OS/multi-host. Registro exclusivo no constituye una migración atómica administrativa. No se implementaron migración v1→v2, Maintenance Backend ni transferencia de grants.
 
+## Corrección del contrato publicado — PR #10
+
+Revisión del 29-10-2026. Antes de editar se ejecutó `git fetch origin main refs/pull/10/head` por SSH: el HEAD remoto del PR era `1f3490fb4d3060ffb0cf3949ca3a1f88c7a40b77`, idéntico al checkout local limpio. Ambos problemas seguían presentes. El commit funcional validado es `bda2adf`.
+
+Se restauraron `minLength: 1` y `maxLength: 2048` en el esquema publicado de transformación v1. El codec sigue separado del descriptor usado para fingerprints. Esos límites cuentan caracteres JSON Schema; el control confiable continúa contando unidades UTF-16. Su conjunción conserva el conjunto de entradas aceptadas por el validador legado, incluidos caracteres suplementarios y sustitutos aislados.
+
+Para transformación v2, `constraintsFor()` obtiene los límites del esquema validado del descriptor y los expresa como caracteres Unicode. La descripción exige todas las restricciones de inputSchema y distingue el máximo adicional de 2.048 unidades UTF-16 del adaptador. No cambia el descriptor ni la validación efectiva, los hashes de solicitud o los grants. Ambos adaptadores de inferencia continúan consumiendo `schemaFor()` y `constraintsFor()` comunes.
+
+Las dos regresiones de `test/v3-tool-schema.test.ts` se ejecutaron primero contra el HEAD original: **2 fallos esperados**, por `minLength` ausente y descripción genérica incorrecta. Tras la corrección verifican esquema publicado, identidad del descriptor, vectores históricos de fingerprint/requestHash, comparación con la referencia legada y casos Unicode de frontera. Los contratos v2 de 1–1.024, 2–4 y 3–3 caracteres se comparan con descripción y aceptación/rechazo del Gateway, incluidos campos extra y operación no admitida.
+
+Validación sobre copia nueva `/tmp/adr087-pr10-2_5w9lkb`, con Node v24.22.1, npm 11.19.1 y Linux 6.18.55-2-cachyos-lts. Sin copiar datos operacionales ni credenciales; node_modules reutilizado por symlink, sin reinstalar dependencias. Ejecución fuera del sandbox para las pruebas entre procesos. No se hicieron inferencias remotas ni cambios arquitectónicos.
+
+| Comprobación | Resultado |
+|---|---|
+| `npm run typecheck` | PASS, salida 0 |
+| `npm run test:core` | **58/58 PASS**, incluidos los dos tests nuevos |
+| Integraciones v1, v2 y v3, en ese orden | PASS, salidas 0 |
+| `git diff --check` | PASS |
+
+Evidencia persistida: [typecheck](evidence/adr087-pr10-typecheck.txt), [suite](evidence/adr087-pr10-core.txt), [integraciones](evidence/adr087-pr10-integrations.txt). Las pruebas históricas de grants, approvals y recuperación siguen incluidas en la suite completa. La consistencia probada es la representación local entregada a proveedores y su relación con el Gateway; no acredita comportamiento de un LLM remoto. No se consultó CI hospedada en esta revisión.
+
 ## Entrega
 
-Rama `feat/adr087-input-contract`, para PR independiente contra `main`. Por instrucción del responsable se usa solo SSH: el push publica commits, pero la creación del PR requiere la interfaz web o API autenticada. [Descripción preparada](adr087-pr.md). No se ha efectuado merge.
+Rama `feat/adr087-input-contract`, correspondiente al [PR #10](https://github.com/Migueld1324/agent-runtime/pull/10) contra `main`. Las correcciones se publican en esa misma rama por SSH. Se conserva la [descripción original preparada](adr087-pr.md) como antecedente de la entrega. No se ha efectuado merge.
