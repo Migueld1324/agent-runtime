@@ -6,7 +6,7 @@ El backend portable permite probe/preview informativo y consulta administrativa 
 
 Conserva ADR-085/086/087: ningún cambio al runtime v1/v2/v3, grants, huellas, ledger, checkpoints o dependencias. No habilita ADR-087 Incremento 2.
 
-Validación en copia aislada con Node 24.22.1: typecheck, **81/81 tests** y las tres integraciones secuenciales PASS; diff sin errores. Incluye matriz completa de estados, autenticación/expiración/revocación, digest, replay, concurrencia lógica, respuesta perdida, corrupción y fallos de persistencia/auditoría. Pruebas nativas P03–P15/P19/P21 y C1–C8 no ejecutadas.
+Validación en copia aislada con Node 24.22.1: typecheck, **90/90 tests** y las tres integraciones secuenciales PASS; diff sin errores. Incluye matriz completa de estados, autenticación/expiración/revocación, digest, replay, concurrencia lógica, respuesta perdida, corrupción y fallos de persistencia/auditoría. Pruebas nativas P03–P15/P19/P21 y C1–C8 no ejecutadas.
 
 Documentación y evidencia:
 
@@ -15,3 +15,5 @@ Documentación y evidencia:
 - `docs/delivery/maintenance-m1-implementation.md`: continuidad de la entrega.
 
 Requiere revisión antes del merge. No hacer merge automáticamente.
+
+Revisión final de integridad: validación estricta de identidad, registro y variantes de claim; inspección rechaza registros parciales, colecciones dispersas y requests/nonces contradictorios. Nueve regresiones nuevas; evidencia y riesgos residuales en `docs/delivery/maintenance-m1-review.md`. PR existente: #11; esta descripción preparada no acredita edición del cuerpo remoto.
