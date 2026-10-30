@@ -1,0 +1,5 @@
+
+> agent-runtime-poc@0.3.1 test:v2:integration
+> tsx test/v2-integration.ts
+
+PASS: tool registered dynamically; approval persisted across processes; grant reused/revoked; read/write policies enforced.
