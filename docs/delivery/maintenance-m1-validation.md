@@ -2,6 +2,8 @@
 
 Fecha: 29-10-2026. Rama `feat/adr088-maintenance-m1`. Base funcional `4ea8430`; preparación `e1f1a49`; implementación `3762c8b` y `2cf81fb`. Especificación de interfaces, codec y obligaciones M2: [contrato](maintenance-m1-contract.md).
 
+**Revisión final sobre `72e2a17`:** corregida validación de registros persistidos; **90/90 pruebas**, typecheck y tres integraciones PASS. Hallazgos confirmados/descartados y límites en [revisión final](maintenance-m1-review.md). Los resultados 81/81 que siguen se conservan como evidencia anterior. PR existente [#11](https://github.com/Migueld1324/agent-runtime/pull/11), confirmado abierto por API antes de publicar estos cambios.
+
 ## Ejecución
 
 Linux `6.18.55-2-cachyos-lts`, Node `v24.22.1`, npm `11.19.1`. Copia desechable `/tmp/adr088-m1-d_zzuz4v`, sin copiar `data/`, `workspace/`, configuración de credenciales ni `.git`. Dependencias locales mediante symlink; no se ejecutó `npm ci` ni se modificó el lockfile. Proveedores cloud deshabilitados y directorio de autenticación desechable. No se hicieron inferencias remotas.
@@ -46,4 +48,4 @@ La revisión local comprobó separación de imports, ausencia de acceso al files
 
 ## Publicación
 
-Push SSH de `feat/adr088-maintenance-m1` confirmado; código/evidencia publicados en `42b960b`, con cierre documental posterior. Sin merge. Creación del PR pendiente por ausencia de CLI/token/conector GitHub; [enlace de creación](https://github.com/Migueld1324/agent-runtime/pull/new/feat/adr088-maintenance-m1) y [descripción preparada](maintenance-m1-pr.md). No hay CI hospedada acreditada para esta rama todavía.
+Rama `feat/adr088-maintenance-m1` publicada por SSH. La entrega inicial quedó en `42b960b` y su continuidad en `72e2a17`. El PR se creó posteriormente: [#11](https://github.com/Migueld1324/agent-runtime/pull/11), confirmado abierto por API pública durante esta revisión. Corrección funcional adicional `4af73d4`; se publica en la misma rama para actualizar ese PR. No se abre otro PR ni se hace merge. No se acredita CI hospedada en esta revisión; evidencia local completa en [revisión final](maintenance-m1-review.md).

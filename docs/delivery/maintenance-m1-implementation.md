@@ -1,6 +1,6 @@
 # ADR-088 M1 — plan y continuidad
 
-Estado: M1 implementado y verificado localmente; rama publicada; creación/revisión del PR pendiente. Autorización: solicitud explícita del responsable para M1 completo, una única entrega/PR. No requiere nueva aprobación de ADR-088. Rama: `feat/adr088-maintenance-m1`. Base: `4ea84308496ca5ee7c885d899c058c3fe13e95e6`.
+Estado: M1 implementado y verificado localmente; rama publicada; PR #11 existente, revisión pendiente. Autorización: solicitud explícita del responsable para M1 completo, una única entrega/PR. No requiere nueva aprobación de ADR-088. Rama: `feat/adr088-maintenance-m1`. Base: `4ea84308496ca5ee7c885d899c058c3fe13e95e6`.
 
 ## Dependencia comprobada
 
@@ -40,12 +40,10 @@ Codec propio `maintenance-canonical/1`, autenticación de transporte separada, c
 
 ## Punto de continuidad
 
-Implementación completa de los siete pasos dentro del alcance portable. Commits funcionales: `3762c8b` (contratos/digest y vectores) y `2cf81fb` (policy, estados, persistencia, backend y regresiones). Ningún cambio a código de runtime v1/v2/v3, dependencias, grants/checkpoints/ledger ni datos del usuario.
+M1 completo, con revisión final de integridad sobre `72e2a17`; corrección funcional en `4af73d4`. Se corrigieron defectos demostrados de validación de identidades/registros, resultados parciales, colecciones contradictorias y respuestas de claim; nueve pruebas nuevas, siete grupos rojos sobre el código original y todos verdes tras corrección. No se reimplementó M1 ni se comenzó M2. [Hallazgos y alcance](maintenance-m1-review.md).
 
-Validación final del 29-10-2026, copia `/tmp/adr088-m1-d_zzuz4v`: typecheck PASS, suite **81/81 PASS** (23 pruebas M1 nuevas), integraciones v1/v2/v3 secuenciales PASS. Node v24.22.1, dependencias locales reutilizadas por symlink, sin reinstalación ni credenciales. La suite completa se ejecutó fuera del sandbox: el runner dentro del sandbox no reportó casos individuales y quedó detenido en pruebas entre procesos, por lo que esa ejecución se interrumpió y no cuenta como PASS. Evidencia y matriz en [validación M1](maintenance-m1-validation.md).
+Validación actual: copia `/tmp/adr088-review-3lbnft2v`, typecheck PASS, **90/90 pruebas PASS**, tres integraciones secuenciales PASS y diff sin errores. Fuentes/tests comparados byte a byte con la copia. Evidencia adicional en `evidence/adr088-m1-review-*.txt`; se conserva el expediente histórico 81/81. Ningún cambio a ADR, runtime v1/v2/v3, dependencias, grants/checkpoints/ledger o datos del usuario.
 
-Entrega publicada por SSH: `origin/feat/adr088-maintenance-m1`, con implementación y evidencia en `42b960b` (más este cierre documental). Push confirmado el 29-10-2026, sin merge. El árbol local quedó limpio y la rama sigue al remoto.
+Existe el [PR #11](https://github.com/Migueld1324/agent-runtime/pull/11), abierto, confirmado por API pública con HEAD `72e2a17` antes de esta revisión. Publicar estos commits adicionales en la misma rama actualiza ese PR. No abrir otro PR ni hacer merge automático. La limitación anterior para crear el PR queda superada por su existencia; no implica disponibilidad de credenciales para editar título/cuerpo por API.
 
-Pendiente de entrega: crear/revisar **un único PR** contra main con toda M1. Bloqueo operativo concreto: no hay `gh`, `GH_TOKEN`/`GITHUB_TOKEN`, configuración de gh ni conector GitHub en el entorno. SSH permitió publicar, pero no proporciona la API para crear el PR. [Abrir el PR único](https://github.com/Migueld1324/agent-runtime/pull/new/feat/adr088-maintenance-m1); título y cuerpo listos en [PR M1](maintenance-m1-pr.md). No solicitar otra aprobación de ADR-088 ni reimplementar componentes. No hacer merge automáticamente.
-
-No queda implementación M1 pendiente identificada en esta revisión. No atribuir a esta entrega P03–P15/P19/P21 nativos, C1–C8 ni D3–D10. M2–M4 y ADR-087 Incremento 2 siguen pendientes y no están habilitados. Siguiente acción: crear el PR único desde la rama publicada cuando exista un canal autenticado y atender su revisión sin reducir el alcance aprobado.
+No queda bloqueo técnico M1 identificado tras la validación. La entrega se publica en la misma rama del PR #11; siguiente acción de desarrollo: atender su revisión. Verificar el HEAD remoto antes de continuar si la sesión se interrumpe durante la publicación. No exigir nuevamente aprobación de ADR-088. Validación estructural no acredita autenticidad histórica, completitud del store ni detección de rollback: siguen siendo obligaciones M2. No habilitar M2–M4 o ADR-087 Incremento 2 ni atribuir a los dobles garantías nativas.
