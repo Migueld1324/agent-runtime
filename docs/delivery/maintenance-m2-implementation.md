@@ -62,3 +62,11 @@ y no forman parte del commit.
 
 Pérdida de energía/VM: no verificada. SIGKILL no la acredita.
 Exclusión, publicación y reapertura efectivas son M3/M4 y permanecen deshabilitadas.
+
+## Revisión focalizada solicitada por el responsable
+
+Tras `21b1560`, se aclararon los límites de las copias previas a recuperación y las
+comprobaciones por pathname. Las pruebas reproducen mezcla de commits y distinguen
+sustituciones detectadas de carreras fuera del modelo de confianza. No se añadió
+exclusión M3 ni cambió la lógica de producción. Ver
+[revisión focalizada](maintenance-m2-focused-review.md); aprobación del PR pendiente.

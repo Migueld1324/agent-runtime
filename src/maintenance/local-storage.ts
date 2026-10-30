@@ -1,4 +1,9 @@
-/** Authority-only local storage primitives. Never exposed as client path APIs. */
+/** Authority-only local storage primitives. Never exposed as client path APIs.
+ * Path checks are observations, not an atomic namespace/fencing mechanism. They
+ * assume trusted owners do not replace paths or change permissions concurrently.
+ * O_NOFOLLOW protects the final component only; ancestors are checked by pathname.
+ * readRegular compares its observed inode with the opened fd and the final path,
+ * but this does not make earlier permission checks atomic with the later open. */
 import {createHash} from 'node:crypto';
 import {constants, closeSync, fstatSync, fsyncSync, lstatSync, openSync, readFileSync, realpathSync, statfsSync, writeFileSync} from 'node:fs';
 import {dirname, resolve, parse} from 'node:path';

@@ -8,7 +8,8 @@ inventario protegido, journal SQLite/ancla y deduplicación durable. La pérdida
 sustitución de una base esperada bloquea la instalación; abrir o inspeccionar no
 crea stores perdidos. Los inspectores v1/v2/v3 evalúan todos los runs y rechazan
 formatos, agendas, vínculos o estados inciertos. Staging/respaldo conservan bytes y
-digests; la recuperación explícita preserva inputs antes del rollback SQLite.
+digests; la recuperación explícita conserva observaciones secuenciales de los
+archivos antes de permitir el rollback SQLite, sin prometer un snapshot conjunto.
 
 Conserva el backend portable cerrado: no concede sesiones, exclusión, aplicación ni
 reapertura. No inicia M3/M4 ni ADR-087 Incremento 2. Importación no habilitada;
@@ -23,3 +24,8 @@ Validación: 125/125 tests core, typecheck, tres integraciones e inspección PAS
 P19 ejecutada manualmente por el responsable: uid 65534 sin acceso de lectura ni
 escritura al journal/ancla, exit 0. Permisos probados en tmpfs; regresión de
 almacenamiento en btrfs. No hay merge automático ni perfil nativo desplegado.
+
+Revisión focalizada: copias forenses no atómicas y comprobaciones de rutas
+condicionadas a propietarios confiables sin sustituciones concurrentes. Cinco
+pruebas nuevas de caracterización y 17 de almacenamiento PASS; ver
+`maintenance-m2-focused-review.md`. Sin cambios funcionales ni ampliación a M3.

@@ -1,0 +1,30 @@
+✔ M2 recovery copies can span commits: digests attest bytes, not a joint snapshot (259.394709ms)
+✔ M2 readRegular detects file replacement between identity check and open (1.529736ms)
+✔ M2 readRegular detects parent replacement between identity check and open (1.012066ms)
+✔ M2 protected path checks are observations, not fencing against the authority uid (1.169734ms)
+✔ M2 rejects ordinary-user-writable ancestors and static file aliases (1.205612ms)
+✔ M2 real SQLite: durable claim, exact deduplication, nonce and immutable completion (131.172602ms)
+✔ M2 generation persists; request keys and nonce consumption survive generations (89.270918ms)
+✔ M2 partial journal restore and truncation fail closed against retained anchor (64.028241ms)
+✔ M2 valid-shaped history tampering cannot pass the anchored chain (49.303917ms)
+✔ M2 missing journal, missing anchor, empty and substituted databases are not new installations (53.141973ms)
+✔ M2 identity observes actual resources; unexpected store, sidecar and root substitution reject (112.795753ms)
+✔ M2 ordinary permissions, sidecars and unknown schema reject without repair (30.850994ms)
+✔ M2 audit rejects raw fields and preserves query bytes (41.111167ms)
+✔ M2 real process death: reads refuse rollback journal; explicit recovery preserves prior evidence (238.992564ms)
+✔ M2 competing processes consume a nonce at most once (201.083058ms)
+✔ M2 confirmed results require exact anchored administrative evidence (105.904927ms)
+✔ M2 complete new inventory: absence is backed by provisioning, never observed as zero runs (40.170086ms)
+✔ M2 anchor rollback, content-identical file substitution and write failure reject (98.105282ms)
+✔ M2 provisioned real stores have protected identities and inspectors never recreate lost data (152.858825ms)
+✔ M2 port composes with M1 without enabling maintenance or weakening current authorization (106.262194ms)
+✔ M2 anchored artifact references are reverified on every history read (90.504843ms)
+✔ M2 real SQLITE_FULL rolls claim and nonce back together and preserves anchor (56.058073ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1830.550216

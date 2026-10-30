@@ -67,8 +67,12 @@ export class SqliteMaintenancePersistence implements MaintenancePersistence {
     syncDirectory(location.journalDirectory); syncDirectory(location.anchorDirectory);
     return new SqliteMaintenancePersistence(location);
   }
-  /** Explicit native rollback recovery. Copies evidence first, never deletes sidecars,
-   * never creates missing databases, and never repairs business stores. Authority-only. */
+  /** Explicit native rollback recovery, authority-only. The caller must arrange
+   * quiescence of administrative writers for a coherent forensic capture; M2
+   * neither establishes nor proves that boundary. Copies are sequential byte
+   * observations, not an atomic snapshot or a restorable backup guarantee.
+   * The later SQLite lock/verification validates live state, not capture coherence.
+   * No manual sidecar deletion, missing database creation or business repair. */
   static recoverStorage(location: StorageLocation, evidenceDirectory: string): SqliteMaintenancePersistence {
     privateDirectory(dirname(evidenceDirectory));
     for (const [directory, base] of [[location.journalDirectory, 'journal.sqlite'], [location.anchorDirectory, 'anchor.sqlite']]) {
@@ -90,8 +94,11 @@ export class SqliteMaintenancePersistence implements MaintenancePersistence {
     }
     const encoded = canonical({version: 'maintenance-storage-recovery/1', artifacts: receipt});
     writeExclusive(join(evidenceDirectory, 'receipt.json'), encoded);
-    // SQLite's own locks and rollback protocol decide whether recovery is possible.
-    // Failure preserves both the originals and the forensic copies for intervention.
+    // Digests attest captured bytes only, not simultaneous source state. SQLite's
+    // locks/rollback decide recovery of live databases; the copies are not replayed.
+    // Captured copies survive failure. Native rollback may already have changed
+    // source files/sidecars before a later validation fails; no byte-preservation
+    // guarantee for the originals once SQLite has been allowed to open them.
     let db: DatabaseSync | undefined;
     try {
       const main = pathToFileURL(join(location.journalDirectory, 'journal.sqlite')); main.searchParams.set('mode', 'rw');

@@ -81,7 +81,7 @@ no como validación de los cambios posteriores.
 | Terminalidad v1/v2/v3 | PASS: fixtures positivos/negativos y stores generados por integraciones; todos los runs inspeccionados | Autenticidad retrospectiva fuera de garantía; formatos desconocidos bloquean |
 | claim/nonce/resultados | PASS: reapertura, identidad completa, inmutabilidad, dos procesos concurrentes y composición M1 | No acredita exclusión de ejecutores |
 | Cadena/ancla/rollback parcial | PASS: manipulación, restore parcial de ambas contrapartes, pérdida y sustitución | Restore coordinado privilegiado fuera de garantía |
-| Recuperación administrativa explícita | PASS: SIGKILL con páginas modificadas, lectura bloqueada y copias antes del rollback nativo | SIGKILL no equivale a corte de energía; no recupera negocio |
+| Recuperación administrativa explícita | PASS: SIGKILL con páginas modificadas, lectura bloqueada y copias antes del rollback nativo | SIGKILL no equivale a corte de energía; no recupera negocio; copias secuenciales no son snapshot conjunto |
 | Fallos y retención de artefactos | PASS: bytes/digests y referencias ancladas, corrupción; EIO/ENOSPC inyectados en write/fsync; SQLITE_FULL real al reclamar | No se probó fallo físico EIO/ENOSPC; publicación/rename/cierre son M4 |
 | Protección P19 | PASS: modos/ancestros, canario/policy y ejecución manual con uid 65534; lectura y escritura denegadas en journal/ancla, exit 0 | Ensayo en tmpfs: acredita permisos, no persistencia tras reinicio ni frontera M3 |
 | P23 | PASS: typecheck, 125/125 core, tres integraciones e inspección; todos exit 0 | No se atribuye CI hospedada |
@@ -126,3 +126,11 @@ para lectura y apertura r+ de ambos archivos. El PASS supera el fallo previo de
 NVM. Typecheck pasó tras corregir el runner; producción y tests core no cambiaron.
 P19 acredita permisos bajo este entorno; no acredita persistencia de tmpfs,
 retirada de handles ni despliegue de autoridad separada M3.
+
+## Revisión focalizada posterior al commit 21b1560
+
+Ver [recuperación y sustitución de rutas](maintenance-m2-focused-review.md).
+Se reproducen los límites de captura secuencial y comprobaciones por pathname;
+no se declara exclusión adicional. Cinco pruebas nuevas de caracterización y las
+17 pruebas de almacenamiento existentes: 22/22 PASS. La regresión completa 125/125
+y P19 anteriores conservan su alcance; no se presentan como nuevas ejecuciones.
