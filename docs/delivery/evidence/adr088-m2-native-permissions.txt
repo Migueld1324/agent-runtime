@@ -1,0 +1,2 @@
+PASS P19: distinct uid denied read/write on journal and anchor; no business resources used
+Exit code: 0

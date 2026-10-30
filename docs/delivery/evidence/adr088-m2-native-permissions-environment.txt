@@ -1,0 +1,4 @@
+Fri Oct 30 07:45:05 PM UTC 2026
+Linux 6.18.55-2-cachyos-lts
+v24.22.1
+Filesystem de /tmp: tmpfs

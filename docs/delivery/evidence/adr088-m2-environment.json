@@ -1,0 +1,15 @@
+{
+  "checkout": "/home/migue/agent-runtime/.adr088-m2-validation-t44am0cr",
+  "testTemporaryDirectory": "/home/migue/agent-runtime/.adr088-m2-validation-t44am0cr/tmp",
+  "kernel": "6.18.55-2-cachyos-lts",
+  "node": "v24.22.1",
+  "filesystem": "btrfs",
+  "results": {
+    "typecheck": 0,
+    "test:core": 0,
+    "test:integration": 0,
+    "test:v2:integration": 0,
+    "test:v3:integration": 0,
+    "real-store-inspection": 0
+  }
+}

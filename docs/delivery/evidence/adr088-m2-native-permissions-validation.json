@@ -1,0 +1,12 @@
+{
+  "execution": "manual by repository owner; reported in conversation and retained logs inspected",
+  "result": "PASS",
+  "exitCode": 0,
+  "filesystem": "tmpfs",
+  "scope": "P19 distinct uid read/write denial; not crash durability or M3 exclusion",
+  "sha256": {
+    "test/maintenance-native-permissions.ts": "4747943d838db2c5cc6abca4ecaa61250d24ee0afb93ee2b73a864dfc970ea84",
+    "docs/delivery/evidence/adr088-m2-native-permissions.txt": "f9130f2b408987fda2b851adc33865bda06fc5c299d27ca3260570fb5a2a7dbe",
+    "docs/delivery/evidence/adr088-m2-native-permissions-environment.txt": "9cf506660851074f50ca69e29f02d598dc479d5f9831c794b3834557bb527529"
+  }
+}

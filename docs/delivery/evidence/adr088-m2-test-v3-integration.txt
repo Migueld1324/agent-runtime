@@ -1,0 +1,5 @@
+
+> agent-runtime-poc@0.3.1 test:v3:integration
+> tsx test/v3-integration.ts
+
+PASS: sequential tools, durable approvals and grants; verified completion; separate CLI process retried verification without replaying the model or tools.
