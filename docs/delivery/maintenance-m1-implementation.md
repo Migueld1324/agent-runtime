@@ -1,6 +1,6 @@
 # ADR-088 M1 — plan y continuidad
 
-Estado: preparación; M1 no implementado ni verificado. Autorización: solicitud explícita del responsable para M1 completo, una única entrega/PR. No requiere nueva aprobación de ADR-088. Rama: `feat/adr088-maintenance-m1`. Base: `4ea84308496ca5ee7c885d899c058c3fe13e95e6`.
+Estado: M1 implementado y verificado localmente; publicación/revisión del PR pendiente. Autorización: solicitud explícita del responsable para M1 completo, una única entrega/PR. No requiere nueva aprobación de ADR-088. Rama: `feat/adr088-maintenance-m1`. Base: `4ea84308496ca5ee7c885d899c058c3fe13e95e6`.
 
 ## Dependencia comprobada
 
@@ -32,12 +32,18 @@ M2 aporta identidad/inventario/journal/ancla; M3 exclusión nativa; M4 publicaci
 
 Las elecciones de tipos, codec e interfaces concretas deben documentarse al implementarlas. Si una elección exige modificar una decisión arquitectónica, detener ese punto y solicitar autorización; no sustituirlo silenciosamente por un contrato más débil.
 
+## Interfaces concretadas
+
+La frontera implementada y las obligaciones del adaptador M2 están en [contrato M1/M2](maintenance-m1-contract.md). M1 contiene el puerto transaccional de solicitudes/resultados y el coordinador de deduplicación; no contiene store de producción, journal/ancla, aprovisionamiento, exclusión o publicador. Los dobles quedan exclusivamente en tests. Los rechazos del backend sin persistencia no se presentan como deduplicación durable.
+
+Codec propio `maintenance-canonical/1`, autenticación de transporte separada, consentimiento exacto por acción, estados/recuperación puros y backend informativo sin emisión de sesiones aplicables. Los resultados del backend declaran admisión `unknown`, pues M1 no observa ni controla un servicio real. El arranque cerrado del modelo no acredita una barrera OS.
+
 ## Punto de continuidad
 
-Completado: sincronización, comprobación de integración por identidad de árbol, rama nueva, inspección preliminar y plan presentado. No hay componentes M1 funcionales ni pruebas nuevas. No se ejecutaron suites; las evidencias de ADR-087 son históricas.
+Implementación completa de los siete pasos dentro del alcance portable. Commits funcionales: `3762c8b` (contratos/digest y vectores) y `2cf81fb` (policy, estados, persistencia, backend y regresiones). Ningún cambio a código de runtime v1/v2/v3, dependencias, grants/checkpoints/ledger ni datos del usuario.
 
-Pendiente: toda la implementación y verificación de los siete pasos. No hay bloqueo de aprobación arquitectónica identificado. La frontera de persistencia M1/M2 necesita concretarse contra el texto aprobado antes de programar deduplicación; no es autorización para incorporar M2.
+Validación final del 29-10-2026, copia `/tmp/adr088-m1-d_zzuz4v`: typecheck PASS, suite **81/81 PASS** (23 pruebas M1 nuevas), integraciones v1/v2/v3 secuenciales PASS. Node v24.22.1, dependencias locales reutilizadas por symlink, sin reinstalación ni credenciales. La suite completa se ejecutó fuera del sandbox: el runner dentro del sandbox no reportó casos individuales y quedó detenido en pruebas entre procesos, por lo que esa ejecución se interrumpió y no cuenta como PASS. Evidencia y matriz en [validación M1](maintenance-m1-validation.md).
 
-Siguiente acción: leer de nuevo los apartados de datos/operaciones, autorización y persistencia de ADR-088 junto a M1/M2, fijar interfaces y matriz trazable de aceptación del protocolo, e implementar contratos/digest con sus pruebas. Continuar en esta rama, con commits internos coherentes, sin abrir un PR parcial ni reducir criterios para declarar cierre.
+Pendiente de entrega: publicar la rama y crear/revisar **un único PR** contra main con toda M1. El entorno dispone de remoto SSH, pero no tiene `gh`, `GH_TOKEN`/`GITHUB_TOKEN`, configuración de gh ni conector GitHub. La descripción está preparada en [PR M1](maintenance-m1-pr.md). Si SSH permite push, la rama podrá publicarse aunque la creación del PR quede pendiente de un canal autenticado de GitHub. No hacer merge automáticamente.
 
-Este corte se guarda por límite de contexto/presupuesto de la sesión; no constituye finalización de M1.
+No queda implementación M1 pendiente identificada en esta revisión. No atribuir a esta entrega P03–P15/P19/P21 nativos, C1–C8 ni D3–D10. M2–M4 y ADR-087 Incremento 2 siguen pendientes y no están habilitados. Siguiente acción: verificar la publicación de la rama, crear el PR único cuando exista un canal autenticado y atender su revisión sin reducir el alcance aprobado.
