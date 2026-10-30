@@ -110,6 +110,14 @@ const capabilities = object({protocol, adapterId: str, adapterVersion: str, prof
   access: choice('proven', 'unavailable', 'unknown'), admission: choice('proven', 'unavailable', 'unknown'),
   quiescence: choice('proven', 'unavailable', 'unknown'), durability: choice('proven', 'unavailable', 'unknown'),
   reasons: list(choice(...ERROR_CODES))});
+const requestId: Parser<string> = v => typeof v === 'string' && /^[A-Za-z0-9._:-]{1,128}$/.test(v) ? v : fail('maintenance_protocol_invalid');
+const requestIdentity = object({protocol, installationId: str, generation: integer, requestId,
+  operationId: str, method: choice('enter', 'apply', 'recover', 'leave'), contentDigest: digest,
+  principalId: str, authorizationId: str, nonce: str});
+const requestRecord = object({identity: requestIdentity, result: nullable(result)});
+export type RequestIdentity = Parsed<typeof requestIdentity>;
+export type RequestRecord = Parsed<typeof requestRecord>;
+export type Claim = {kind: 'new'} | {kind: 'existing'; record: RequestRecord} | {kind: 'conflict'} | {kind: 'replay'};
 export type InstallationBinding = Parsed<typeof binding>;
 export type MaintenancePlan = Parsed<typeof plan>;
 export type MaintenanceAuthorization = Parsed<typeof authorization>;
@@ -161,4 +169,27 @@ export function parseResult(v: unknown): MaintenanceResult {
   if (['rejected', 'indeterminate'].includes(r.outcome) && r.code === null) fail('maintenance_protocol_invalid');
   if (r.outcome === 'indeterminate' && r.admission === 'open') fail('maintenance_protocol_invalid');
   return r;
+}
+
+/** Structural consistency only; authenticated historical provenance belongs to M2. */
+export const parseRequestIdentity = (v: unknown): RequestIdentity => parse(requestIdentity, v);
+export function parseRequestRecord(v: unknown): RequestRecord {
+  const record = parse(requestRecord, v);
+  if (record.result !== null) {
+    const result = parseResult(record.result);
+    if (result.operationId !== record.identity.operationId) fail('maintenance_protocol_invalid');
+  }
+  return record;
+}
+export function parseClaim(v: unknown): Claim {
+  const snapshot = wireSnapshot(v);
+  if (!snapshot || typeof snapshot !== 'object' || Array.isArray(snapshot)) fail('maintenance_protocol_invalid');
+  const kind = (snapshot as Record<string, unknown>).kind;
+  if (kind === 'existing') {
+    const claim = parse(object({kind: choice('existing'), record: requestRecord}), snapshot);
+    parseRequestRecord(claim.record);
+    return claim;
+  }
+  const tag = parse(object({kind: choice('new', 'conflict', 'replay')}), snapshot);
+  return tag;
 }

@@ -1,7 +1,7 @@
 import {
   PROTOCOL, type BackendCapabilities, type MaintenancePlan, type MaintenanceResult,
   type MaintenanceSession, type ErrorCode, type Action, parseBinding, parsePlan,
-  parseSession, parseCapabilities, parseResult, normalizeError, fail, wireSnapshot,
+  parseSession, parseCapabilities, parseResult, normalizeError, fail, wireSnapshot, parseRequestRecord,
 } from './contracts.ts';
 import {planDigest} from './digest.ts';
 import {type MaintenancePolicy, applyAction} from './policy.ts';
@@ -82,11 +82,16 @@ export class PortableMaintenanceBackend<C> implements MaintenanceBackend<C> {
     if (typeof operationId !== 'string' || !operationId.length || operationId.length > 4096) fail('maintenance_protocol_invalid');
     if (!this.#persistence) fail('maintenance_exclusion_unavailable');
     try {
-      const records = await this.#persistence.readOperation(binding.installationId, operationId);
-      return records.map(record => {
+      const records = wireSnapshot(await this.#persistence.readOperation(binding.installationId, operationId));
+      if (!Array.isArray(records)) fail('maintenance_persistence_failed');
+      const requests = new Set<string>(), nonces = new Set<string>();
+      return records.map(value => {
+        const record = parseRequestRecord(value);
+        if (requests.has(record.identity.requestId) || nonces.has(record.identity.nonce)) fail('maintenance_persistence_failed');
+        requests.add(record.identity.requestId); nonces.add(record.identity.nonce);
         if (record.identity.operationId !== operationId || record.identity.installationId !== binding.installationId ||
             record.identity.generation !== binding.generation) fail('maintenance_persistence_failed');
-        if (!record.result) return rejection(operationId, 'maintenance_outcome_indeterminate', true);
+        if (record.result === null) return rejection(operationId, 'maintenance_outcome_indeterminate', true);
         const result = parseResult(record.result);
         if (result.operationId !== operationId) fail('maintenance_persistence_failed');
         return result;
