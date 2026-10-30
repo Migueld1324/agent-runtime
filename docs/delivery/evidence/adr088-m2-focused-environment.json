@@ -1,0 +1,23 @@
+{
+  "baseCommit": "21b15604670025987ef56cb0d1509b4f1c62d20a",
+  "node": "v24.22.1",
+  "kernel": "6.18.55-2-cachyos-lts",
+  "temporaryDirectory": "/home/migue/agent-runtime/.adr088-m2-resume-tmp",
+  "filesystem": "btrfs",
+  "tests": {
+    "passed": 22,
+    "failed": 0,
+    "exitCode": 0
+  },
+  "typecheckExitCode": 0,
+  "method": "Deterministic mocked filesystem call boundaries; concurrent journal commit uses a real child process. Comments/documentation clarified after test execution; no functional production changes.",
+  "sha256": {
+    "src/maintenance/local-storage.ts": "8993a36210bcdc2714434192dcaf531785aa5b255ac231da21857e7c2776a2b4",
+    "src/maintenance/sqlite-persistence.ts": "91696f15a34699753c964c697b4dfa01805a5e5798837de682e1483581922100",
+    "test/maintenance-storage-guarantees.test.ts": "74c4d7e348eaa1f8145a3554fa9a7d0e6bc7090dfd2c5e75af1888c116f0e930",
+    "test/maintenance-storage.test.ts": "878eddfd3fcf434a7f3713d01cc7b3a627980a57a87c39dde9145cd6508d3f89",
+    "test/helpers/maintenance-storage-worker.ts": "bf87520c958f30ea31239915b44bb767d4903823ebcbc7fb98a239d24c2af954",
+    "docs/delivery/evidence/adr088-m2-focused-storage-tests.txt": "b19355a6f71519581ec3d685458e49598f23e7101681ccb18f833bdf0370511f",
+    "docs/delivery/evidence/adr088-m2-focused-typecheck.txt": "153df669dd1824bc8d59f4b33a3af7ead7b047dbb54f0311010a9e8d0b67582d"
+  }
+}

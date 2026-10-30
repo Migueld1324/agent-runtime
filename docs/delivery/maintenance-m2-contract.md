@@ -29,6 +29,17 @@ impide accesos de procesos de esa misma identidad.** Debe desplegarse mediante u
 autoridad separada del runtime/CLI; ese despliegue no está acreditado. No resiste a
 root/kernel/autoridad comprometidos ni dispositivos que incumplen flush.
 
+Las comprobaciones por pathname son observaciones sucesivas, no una resolución
+atómica de todo el árbol ni fencing. `O_NOFOLLOW` cubre el componente final de las
+aperturas que lo usan; no fija sus ancestros. `readRegular` compara dev/inode antes,
+en el fd abierto y después, pero no vuelve atómica la comprobación previa de
+permisos de `readProtected`. Las aperturas de SQLite también son por pathname.
+Se presupone que los propietarios confiables no cambian rutas/permisos durante la
+operación. Un escritor con la misma identidad de autoridad o privilegios sobre
+esos directorios puede violar esa premisa; no se promete resistencia a sus carreras.
+P19 prueba denegación a otro uid en los fixtures, no inmunidad a sustitución por la
+autoridad. Ejemplos reproducibles y alcance en [revisión focalizada](maintenance-m2-focused-review.md).
+
 La lista técnica de filesystems candidatos no es lista de perfiles habilitados:
 ext4, XFS, btrfs, overlayfs y tmpfs permiten pruebas de proceso; tmpfs no acredita
 persistencia a reinicio. NFS/SMB y tipos desconocidos se rechazan. La validación
@@ -75,6 +86,21 @@ conserva primero copias privadas y recibo de digests, permite a SQLite su rollba
 nativo, comprueba cadena/ancla/inventario y añade recibo durable de recuperación.
 No borra journals/WAL ni elige historia por timestamps. Datos incompatibles siguen
 bloqueados. Se ensayó SIGKILL con páginas modificadas; eso no es corte de energía.
+
+Las copias de `recoverStorage` se leen secuencialmente **antes** del bloqueo SQLite.
+El recibo `maintenance-storage-recovery/1` y sus digests acreditan los bytes capturados,
+no simultaneidad, completitud frente a escritores concurrentes ni una copia
+restaurable. Sin quiescencia externa pueden mezclar commits y contener datos de una
+escritura en curso. El llamador confiable debe disponer ausencia de escritores
+administrativos si necesita una captura forense coherente; M2 no impone ni acredita
+esa condición y no proporciona un flag que la convierta en garantía.
+
+El `BEGIN EXCLUSIVE` posterior y la validación de cadena/ancla/inventario se aplican
+a las bases activas, no certifican retroactivamente las copias. Un retorno exitoso
+no certifica coherencia de la captura. Las copias no se usan para restaurar ni para
+elegir una historia. Si la validación falla, se conservan los archivos capturados,
+pero SQLite puede haber recuperado/modificado originales o sidecars al abrirlos:
+no se promete que el origen permanezca byte a byte intacto tras un fallo.
 
 `MaintenanceArtifacts` sincroniza archivo y directorio y verifica bytes/digest.
 Las referencias incorporadas al journal se revalidan al reconstruirlo; pérdida o
