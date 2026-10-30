@@ -1,6 +1,8 @@
 # M2 — contrato de almacenamiento candidato
 
 Estado: implementación y validación local M2 completas; entrega en `feat/adr088-maintenance-m2`; PR a cargo del responsable.
+M2 aprobado conforme al [registro de aprobación](maintenance-m2-approval.md):
+las tres condiciones delimitan el alcance y no son tareas pendientes de M2.
 La ADR y `maintenance/1` no se modifican. Este contrato describe APIs internas de
 la autoridad, no endpoints para clientes ni permisos de mantenimiento.
 

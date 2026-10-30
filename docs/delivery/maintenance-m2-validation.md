@@ -1,7 +1,10 @@
-# ADR-088 M2 — validación y pendientes
+# ADR-088 M2 — validación y límites de alcance
 
 Estado: **implementación y validación local M2 completas**. P19 nativa PASS,
-ejecutada manualmente por el responsable. Entrega en `feat/adr088-maintenance-m2`; creación y revisión del PR a cargo del responsable.
+ejecutada manualmente por el responsable. Entrega en `feat/adr088-maintenance-m2`.
+**M2 aprobado** conforme al [registro del responsable](maintenance-m2-approval.md).
+Las condiciones sobre copias, rutas y SIGKILL son límites de alcance aceptados,
+no tareas pendientes de M2.
 No se habilitan M3/M4, publicación, reapertura ni ADR-087 Incremento 2.
 
 ## Reconstrucción del punto de partida (30-10-2026)
@@ -86,7 +89,7 @@ no como validación de los cambios posteriores.
 | Protección P19 | PASS: modos/ancestros, canario/policy y ejecución manual con uid 65534; lectura y escritura denegadas en journal/ancla, exit 0 | Ensayo en tmpfs: acredita permisos, no persistencia tras reinicio ni frontera M3 |
 | P23 | PASS: typecheck, 125/125 core, tres integraciones e inspección; todos exit 0 | No se atribuye CI hospedada |
 
-## P19: bloqueo inicial resuelto y entrega pendiente
+## P19: bloqueo inicial resuelto y entrega
 
 El primer intento automatizado fuera del sandbox terminó en `sudo: a password is
 required`, exit 1. El responsable ejecutó después el runner manualmente con sudo.
@@ -94,7 +97,8 @@ No se modificaron cuentas, sudoers ni permisos de datos reales.
 
 La rama sigue siendo única: `feat/adr088-maintenance-m2`. La implementación y su
 validación local están completas dentro del alcance M2 descrito por esta matriz.
-El responsable autorizó commit y push de M2 y creará/revisará el único PR.
+El responsable autorizó commit y push de M2 y asumió la creación/revisión del único
+PR; después comunicó su [aprobación de alcance](maintenance-m2-approval.md).
 El agente no crea el PR ni hace merge; no se desbloquean M3/M4 o ADR-087 Incremento 2.
 
 ## Intento manual P19 y corrección del runner

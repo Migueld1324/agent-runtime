@@ -1,6 +1,8 @@
 # ADR-088 M2 — implementación y continuidad
 
-Estado: implementación y validación local M2 completas; entrega en `feat/adr088-maintenance-m2`; PR a cargo del responsable.
+Estado: M2 aprobado por el responsable; implementación y validación local completas.
+Entrega en `feat/adr088-maintenance-m2`. Las tres [condiciones de alcance de la
+aprobación](maintenance-m2-approval.md) no son tareas pendientes de M2.
 No habilita M3/M4 ni ADR-087 Incremento 2.
 
 ## Base verificada
@@ -57,8 +59,8 @@ Resultado final: 125/125 core, typecheck, tres integraciones e inspección PASS.
 exit 0. Log, entorno tmpfs y digest del runner conservados; supera el bloqueo
 de sudo y el fallo inicial por Node bajo NVM. Ver evidencia y límites en validación.
 El responsable autorizó commit y push de esta entrega en la misma rama;
-creará y revisará el PR. Las copias temporales de validación se conservan localmente
-y no forman parte del commit.
+posteriormente comunicó su aprobación con condiciones de alcance. Las copias
+temporales de validación se conservan localmente y no forman parte del commit.
 
 Pérdida de energía/VM: no verificada. SIGKILL no la acredita.
 Exclusión, publicación y reapertura efectivas son M3/M4 y permanecen deshabilitadas.
@@ -69,4 +71,5 @@ Tras `21b1560`, se aclararon los límites de las copias previas a recuperación 
 comprobaciones por pathname. Las pruebas reproducen mezcla de commits y distinguen
 sustituciones detectadas de carreras fuera del modelo de confianza. No se añadió
 exclusión M3 ni cambió la lógica de producción. Ver
-[revisión focalizada](maintenance-m2-focused-review.md); aprobación del PR pendiente.
+[revisión focalizada](maintenance-m2-focused-review.md) y el posterior
+[registro de aprobación](maintenance-m2-approval.md).
