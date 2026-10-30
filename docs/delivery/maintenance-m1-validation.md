@@ -43,3 +43,7 @@ La regresión existente conserva confirmación durable de invocaciones, máximo 
 P03–P15/P19/P21 nativos y C1–C8: **NOT RUN**. No se afirma aislamiento OS, ancla protegida, detección de restauración, integridad/terminalidad de un inventario real, publicación, fsync o durabilidad ante reinicio/pérdida de energía. El doble de persistencia solo demuestra semántica portable; el journal/ancla y sus verificaciones pertenecen a M2.
 
 La revisión local comprobó separación de imports, ausencia de acceso al filesystem/ejecutores en `src/maintenance`, snapshots antes de awaits, policy antes de nonce, rechazo de sesiones inventadas, resultados pendientes y coherencia de documentación. No sustituye revisión arquitectónica/de seguridad independiente ni habilita un perfil nativo. M1 no desbloquea ADR-087 Incremento 2. La entrega queda lista para revisión mediante un PR único; no se hace merge automático.
+
+## Publicación
+
+Push SSH de `feat/adr088-maintenance-m1` confirmado; código/evidencia publicados en `42b960b`, con cierre documental posterior. Sin merge. Creación del PR pendiente por ausencia de CLI/token/conector GitHub; [enlace de creación](https://github.com/Migueld1324/agent-runtime/pull/new/feat/adr088-maintenance-m1) y [descripción preparada](maintenance-m1-pr.md). No hay CI hospedada acreditada para esta rama todavía.

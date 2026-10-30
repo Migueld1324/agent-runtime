@@ -1,6 +1,6 @@
 # ADR-088 M1 — plan y continuidad
 
-Estado: M1 implementado y verificado localmente; publicación/revisión del PR pendiente. Autorización: solicitud explícita del responsable para M1 completo, una única entrega/PR. No requiere nueva aprobación de ADR-088. Rama: `feat/adr088-maintenance-m1`. Base: `4ea84308496ca5ee7c885d899c058c3fe13e95e6`.
+Estado: M1 implementado y verificado localmente; rama publicada; creación/revisión del PR pendiente. Autorización: solicitud explícita del responsable para M1 completo, una única entrega/PR. No requiere nueva aprobación de ADR-088. Rama: `feat/adr088-maintenance-m1`. Base: `4ea84308496ca5ee7c885d899c058c3fe13e95e6`.
 
 ## Dependencia comprobada
 
@@ -44,6 +44,8 @@ Implementación completa de los siete pasos dentro del alcance portable. Commits
 
 Validación final del 29-10-2026, copia `/tmp/adr088-m1-d_zzuz4v`: typecheck PASS, suite **81/81 PASS** (23 pruebas M1 nuevas), integraciones v1/v2/v3 secuenciales PASS. Node v24.22.1, dependencias locales reutilizadas por symlink, sin reinstalación ni credenciales. La suite completa se ejecutó fuera del sandbox: el runner dentro del sandbox no reportó casos individuales y quedó detenido en pruebas entre procesos, por lo que esa ejecución se interrumpió y no cuenta como PASS. Evidencia y matriz en [validación M1](maintenance-m1-validation.md).
 
-Pendiente de entrega: publicar la rama y crear/revisar **un único PR** contra main con toda M1. El entorno dispone de remoto SSH, pero no tiene `gh`, `GH_TOKEN`/`GITHUB_TOKEN`, configuración de gh ni conector GitHub. La descripción está preparada en [PR M1](maintenance-m1-pr.md). Si SSH permite push, la rama podrá publicarse aunque la creación del PR quede pendiente de un canal autenticado de GitHub. No hacer merge automáticamente.
+Entrega publicada por SSH: `origin/feat/adr088-maintenance-m1`, con implementación y evidencia en `42b960b` (más este cierre documental). Push confirmado el 29-10-2026, sin merge. El árbol local quedó limpio y la rama sigue al remoto.
 
-No queda implementación M1 pendiente identificada en esta revisión. No atribuir a esta entrega P03–P15/P19/P21 nativos, C1–C8 ni D3–D10. M2–M4 y ADR-087 Incremento 2 siguen pendientes y no están habilitados. Siguiente acción: verificar la publicación de la rama, crear el PR único cuando exista un canal autenticado y atender su revisión sin reducir el alcance aprobado.
+Pendiente de entrega: crear/revisar **un único PR** contra main con toda M1. Bloqueo operativo concreto: no hay `gh`, `GH_TOKEN`/`GITHUB_TOKEN`, configuración de gh ni conector GitHub en el entorno. SSH permitió publicar, pero no proporciona la API para crear el PR. [Abrir el PR único](https://github.com/Migueld1324/agent-runtime/pull/new/feat/adr088-maintenance-m1); título y cuerpo listos en [PR M1](maintenance-m1-pr.md). No solicitar otra aprobación de ADR-088 ni reimplementar componentes. No hacer merge automáticamente.
+
+No queda implementación M1 pendiente identificada en esta revisión. No atribuir a esta entrega P03–P15/P19/P21 nativos, C1–C8 ni D3–D10. M2–M4 y ADR-087 Incremento 2 siguen pendientes y no están habilitados. Siguiente acción: crear el PR único desde la rama publicada cuando exista un canal autenticado y atender su revisión sin reducir el alcance aprobado.
