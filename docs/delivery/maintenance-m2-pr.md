@@ -1,7 +1,9 @@
 # ADR-088 M2: identidad, inventario y evidencia administrativa
 
-Borrador local para el único PR de `feat/adr088-maintenance-m2`.
-**No publicado; implementación y validación local completas, listo para revisión.**
+Descripción preparada para el único PR de `feat/adr088-maintenance-m2`.
+**M2 aprobado por el responsable con tres condiciones de alcance, no tareas
+pendientes**, registradas en [aprobación M2](maintenance-m2-approval.md).
+Este documento no acredita edición del cuerpo del PR ni merge en GitHub.
 
 Implementa almacenamiento administrativo separado con identidad persistente,
 inventario protegido, journal SQLite/ancla y deduplicación durable. La pérdida o

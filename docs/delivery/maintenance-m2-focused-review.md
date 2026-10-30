@@ -10,7 +10,11 @@ Las dos reservas del revisor son válidas como límites de garantía. No se conf
 un defecto bloqueante frente a usuarios ordinarios dentro de la base de confianza
 M2. Sí se reprodujeron comportamientos que impiden prometer snapshot conjunto o
 resistencia general a sustituciones concurrentes. Se acotaron contrato y comentarios;
-la lógica de producción no cambia. La aprobación del PR corresponde al revisor.
+la lógica de producción no cambia. Posteriormente, el responsable comunicó la
+[aprobación de M2](maintenance-m2-approval.md) con tres condiciones de alcance,
+no tareas pendientes: copias no atómicas, ausencia de protección frente a
+sustituciones por la identidad de autoridad y SIGKILL sin acreditar durabilidad
+frente a pérdida física de energía.
 
 ## Recuperación: copias observadas, no snapshot atómico
 
